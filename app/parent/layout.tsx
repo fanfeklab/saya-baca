@@ -65,6 +65,8 @@ function SidebarContent({ pathname, onNavigate }: { pathname: string, onNavigate
   );
 }
 
+import { ParentGate } from "@/components/organisms/parent-gate";
+
 export default function ParentLayout({
   children,
 }: {
@@ -80,36 +82,38 @@ export default function ParentLayout({
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-72 border-r-4 border-black p-6 gap-8 bg-card shadow-neo-sm sticky top-0 h-screen overflow-y-auto">
-        <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
-      </aside>
+    <ParentGate>
+      <div className="flex min-h-screen bg-background">
+        {/* Sidebar - Desktop */}
+        <aside className="hidden lg:flex flex-col w-72 border-r-4 border-black p-6 gap-8 bg-card shadow-neo-sm sticky top-0 h-screen overflow-y-auto">
+          <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
+        </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header - Mobile & Desktop Top Bar */}
-        <header className="h-16 border-b-2 border-black lg:border-none p-4 flex items-center justify-between lg:justify-end gap-4 sticky top-0 bg-background/80 backdrop-blur-md z-30 lg:px-12">
-            <div className="lg:hidden flex items-center gap-2">
-                 <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                    <SheetTrigger asChild>
-                        <Button variant="outline" size="icon" className="border-2 border-black shadow-neo-sm active:shadow-none">
-                            <Menu className="size-6" />
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-72 p-6 border-r-4 border-black">
-                        <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
-                    </SheetContent>
-                 </Sheet>
-                 <NeoText variant="subtitle" stroke className="text-lg uppercase italic ml-2">HUB</NeoText>
-            </div>
-            <ThemeToggle className="border-2 border-black h-10 w-10 shadow-neo-sm active:shadow-none bg-background" />
-        </header>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Header - Mobile & Desktop Top Bar */}
+          <header className="h-16 border-b-2 border-black lg:border-none p-4 flex items-center justify-between lg:justify-end gap-4 sticky top-0 bg-background/80 backdrop-blur-md z-30 lg:px-12">
+              <div className="lg:hidden flex items-center gap-2">
+                   <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                      <SheetTrigger asChild>
+                          <Button variant="outline" size="icon" className="border-2 border-black shadow-neo-sm active:shadow-none">
+                              <Menu className="size-6" />
+                          </Button>
+                      </SheetTrigger>
+                      <SheetContent side="left" className="w-72 p-6 border-r-4 border-black">
+                          <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
+                      </SheetContent>
+                   </Sheet>
+                   <NeoText variant="subtitle" stroke className="text-lg uppercase italic ml-2">HUB</NeoText>
+              </div>
+              <ThemeToggle className="border-2 border-black h-10 w-10 shadow-neo-sm active:shadow-none bg-background" />
+          </header>
 
-        <main className="flex-1 p-6 md:p-12">
-          {children}
-        </main>
+          <main className="flex-1 p-6 md:p-12">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ParentGate>
   );
 }

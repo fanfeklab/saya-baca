@@ -11,6 +11,7 @@ import { useAppStore } from "@/lib/store";
 import { useStore } from "@/hooks/use-store";
 
 const BADGE_MAP = [
+  { id: "abjad", title: "Master Abjad", emoji: "🔤" },
   { id: "membaca", title: "Pembaca Pemula", emoji: "📖" },
   { id: "berhitung", title: "Bintang Angka", emoji: "⭐" },
   { id: "menyanyi", title: "Si Penyanyi", emoji: "🎤" },

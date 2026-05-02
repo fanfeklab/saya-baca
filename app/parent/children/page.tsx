@@ -30,18 +30,48 @@ export default function ChildrenProfilePage() {
   const router = useRouter();
   const profiles = useStore(useAppStore, (state) => state.profiles) || [];
   const setCurrentProfile = useAppStore(state => state.setCurrentProfile);
+  const addProfile = useAppStore(state => state.addProfile);
+  const deleteProfile = useAppStore(state => state.deleteProfile);
+  const updateProfile = useAppStore(state => state.updateProfile);
   
   const [newName, setNewName] = React.useState("");
   const [newAge, setNewAge] = React.useState("5");
+  const [editingProfile, setEditingProfile] = React.useState<any>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
 
   const handleAddChild = () => {
-    // In a real app we'd add to store, for now we just show the idea
+    if (!newName) return;
+    addProfile({
+      name: newName,
+      age: parseInt(newAge),
+      avatar: newName,
+      avatarStyle: "adventurer"
+    });
     setNewName("");
+    setNewAge("5");
+    setIsAddDialogOpen(false);
+  };
+
+  const handleUpdateChild = () => {
+    if (!editingProfile || !newName) return;
+    updateProfile(editingProfile.id, {
+      name: newName,
+      age: parseInt(newAge)
+    });
+    setEditingProfile(null);
+    setNewName("");
+    setNewAge("5");
   };
 
   const handleSelectChild = (profile: any) => {
     setCurrentProfile(profile);
     router.push('/main/learn');
+  };
+
+  const openEdit = (profile: any) => {
+    setEditingProfile(profile);
+    setNewName(profile.name);
+    setNewAge(profile.age.toString());
   };
 
   return (
@@ -52,7 +82,7 @@ export default function ChildrenProfilePage() {
             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px]">Atur Profil dan Kemajuan Belajar</NeoText>
          </div>
          
-         <Dialog>
+         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
             <DialogTrigger asChild>
                 <Button className="h-16 px-8 text-lg font-black uppercase tracking-widest border-4 border-black shadow-neo hover:shadow-neo-lg active:shadow-none transition-all text-black bg-accent">
                     <Plus className="size-6 mr-3" /> Tambah Anak
@@ -93,16 +123,60 @@ export default function ChildrenProfilePage() {
          </Dialog>
       </header>
 
+      {/* Edit Dialog */}
+      <Dialog open={!!editingProfile} onOpenChange={(open) => !open && setEditingProfile(null)}>
+            <DialogContent className="border-4 border-black shadow-neo-lg p-8">
+                <DialogHeader>
+                    <DialogTitle>
+                        <NeoText variant="subtitle" stroke className="uppercase italic">Edit Profil {editingProfile?.name}</NeoText>
+                    </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                    <div className="space-y-2">
+                        <label className="font-black uppercase tracking-widest text-[10px]">Nama Panggilan</label>
+                        <Input 
+                            value={newName} 
+                            onChange={e => setNewName(e.target.value)}
+                            className="h-12 border-2 border-black rounded-xl font-bold" 
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="font-black uppercase tracking-widest text-[10px]">Umur (Tahun)</label>
+                        <Input 
+                            type="number"
+                            value={newAge} 
+                            onChange={e => setNewAge(e.target.value)}
+                            className="h-12 border-2 border-black rounded-xl font-bold" 
+                        />
+                    </div>
+                </div>
+                <DialogFooter className="grid grid-cols-2 gap-4">
+                    <Button 
+                        variant="destructive"
+                        onClick={() => { deleteProfile(editingProfile.id); setEditingProfile(null); }} 
+                        className="h-14 border-2 border-black font-black uppercase shadow-neo-sm hover:shadow-none transition-all"
+                    >
+                        Hapus
+                    </Button>
+                    <Button onClick={handleUpdateChild} className="h-14 border-2 border-black font-black uppercase shadow-neo hover:shadow-none transition-all bg-primary text-white">
+                        Update
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+         </Dialog>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {profiles.map((profile) => (
           <Card key={profile.id} className="border-4 border-black shadow-neo-lg overflow-hidden group">
             <div className="h-32 bg-primary/20 border-b-4 border-black relative overflow-hidden">
                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:20px_20px]" />
                <div className="absolute top-4 right-4 flex gap-2">
-                  <Button variant="outline" size="icon" className="size-10 bg-background border-2 border-black shadow-neo-sm hover:shadow-neo transition-all">
-                    <Settings className="size-5" />
-                  </Button>
-                  <Button variant="outline" size="icon" className="size-10 bg-background border-2 border-black shadow-neo-sm hover:shadow-neo transition-all">
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="size-10 bg-background border-2 border-black shadow-neo-sm hover:shadow-neo transition-all"
+                    onClick={() => openEdit(profile)}
+                  >
                     <Edit2 className="size-5" />
                   </Button>
                </div>

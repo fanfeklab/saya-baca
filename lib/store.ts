@@ -8,18 +8,35 @@ interface ChildProfile {
   avatar: string; // This will be the seed
   avatarStyle: string;
   stars: number;
+  energy: number;
+  lastRefill: number; // timestamp
   completedMissions: string[];
+}
+
+interface GlobalSettings {
+  studyTimer: number; // in minutes, 0 means off
+  isTTSEnabled: boolean;
+  textSize: 'normal' | 'large';
+  isUppercaseOnly: boolean;
+  parentPin: string | null;
 }
 
 interface AppState {
   currentProfile: ChildProfile | null;
   profiles: ChildProfile[];
   totalStars: number;
+  settings: GlobalSettings;
   
   setCurrentProfile: (profile: ChildProfile | null) => void;
   addStars: (amount: number) => void;
   completeMission: (missionId: string) => void;
   updateProfile: (id: string, updates: Partial<ChildProfile>) => void;
+  deleteProfile: (id: string) => void;
+  addProfile: (profile: Omit<ChildProfile, 'id' | 'stars' | 'completedMissions' | 'energy' | 'lastRefill'>) => void;
+  updateSettings: (updates: Partial<GlobalSettings>) => void;
+  loseEnergy: () => void;
+  refillEnergy: (amount: number) => void;
+  resetData: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -32,6 +49,8 @@ export const useAppStore = create<AppState>()(
         avatar: 'Felix',
         avatarStyle: 'adventurer',
         stars: 120,
+        energy: 5,
+        lastRefill: Date.now(),
         completedMissions: [],
       },
       profiles: [
@@ -42,6 +61,8 @@ export const useAppStore = create<AppState>()(
           avatar: 'Felix',
           avatarStyle: 'adventurer',
           stars: 120,
+          energy: 5,
+          lastRefill: Date.now(),
           completedMissions: [],
         },
         {
@@ -51,10 +72,19 @@ export const useAppStore = create<AppState>()(
           avatar: 'Luna',
           avatarStyle: 'adventurer',
           stars: 85,
+          energy: 3,
+          lastRefill: Date.now(),
           completedMissions: [],
         }
       ],
       totalStars: 205,
+      settings: {
+        studyTimer: 0,
+        isTTSEnabled: true,
+        textSize: 'normal',
+        isUppercaseOnly: false,
+        parentPin: null,
+      },
 
       setCurrentProfile: (profile) => set({ currentProfile: profile }),
       
@@ -98,6 +128,71 @@ export const useAppStore = create<AppState>()(
           profiles: updatedProfiles,
           currentProfile: updatedCurrent
         };
+      }),
+
+      deleteProfile: (id) => set((state) => {
+        const updatedProfiles = state.profiles.filter(p => p.id !== id);
+        const updatedCurrent = state.currentProfile?.id === id ? null : state.currentProfile;
+        return {
+          profiles: updatedProfiles,
+          currentProfile: updatedCurrent
+        };
+      }),
+
+      addProfile: (newProfile) => set((state) => {
+        const id = Math.random().toString(36).substring(7);
+        const profile: ChildProfile = {
+          ...newProfile,
+          id,
+          stars: 0,
+          energy: 5,
+          lastRefill: Date.now(),
+          completedMissions: [],
+        };
+        return {
+          profiles: [...state.profiles, profile]
+        };
+      }),
+
+      updateSettings: (updates) => set((state) => ({
+        settings: { ...state.settings, ...updates }
+      })),
+
+      loseEnergy: () => set((state) => {
+        if (!state.currentProfile || state.currentProfile.energy <= 0) return state;
+        const newEnergy = state.currentProfile.energy - 1;
+        const updatedProfiles = state.profiles.map(p => 
+          p.id === state.currentProfile?.id ? { ...p, energy: newEnergy } : p
+        );
+        return {
+          currentProfile: { ...state.currentProfile, energy: newEnergy },
+          profiles: updatedProfiles
+        };
+      }),
+
+      refillEnergy: (amount) => set((state) => {
+        if (!state.currentProfile) return state;
+        const newEnergy = Math.min(5, state.currentProfile.energy + amount);
+        const updatedProfiles = state.profiles.map(p => 
+          p.id === state.currentProfile?.id ? { ...p, energy: newEnergy, lastRefill: Date.now() } : p
+        );
+        return {
+          currentProfile: { ...state.currentProfile, energy: newEnergy, lastRefill: Date.now() },
+          profiles: updatedProfiles
+        };
+      }),
+
+      resetData: () => set({
+        currentProfile: null,
+        profiles: [],
+        totalStars: 0,
+        settings: {
+          studyTimer: 0,
+          isTTSEnabled: true,
+          textSize: 'normal',
+          isUppercaseOnly: false,
+          parentPin: null,
+        }
       })
     }),
     {
