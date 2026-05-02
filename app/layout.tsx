@@ -43,7 +43,7 @@ export default function RootLayout({
         <div className="fixed inset-0 grid-background pointer-events-none -z-10" />
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >

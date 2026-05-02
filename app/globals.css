@@ -8,8 +8,12 @@
 
   --color-background: #FFFDF5;
   --color-foreground: #000000;
-  --color-warm-cream: #FFFDF5;
-  --color-neoblack: #000000;
+  --color-warm-cream: var(--background);
+  --color-neoblack: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   
   --color-primary: #FDE047;
   --color-primary-foreground: #000000;
@@ -18,23 +22,29 @@
   --color-accent: #FDE047;
   --color-accent-foreground: #000000;
   
-  --color-border: #000000;
-  --color-input: #000000;
-  --color-ring: #000000;
+  --color-border: var(--border);
+  --color-input: var(--border);
+  --color-ring: var(--ring);
 
-  --radius-xl: 0px;
-  --radius-lg: 0px;
-  --radius-md: 0px;
-  --radius-sm: 0px;
+  --radius-xl: 2.5rem;
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.5rem;
 
-  --shadow-neo: 4px 4px 0px 0px #000000;
-  --shadow-neo-lg: 8px 8px 0px 0px #000000;
+  --shadow-neo: 4px 4px 0px 0px var(--ring, #000000);
+  --shadow-neo-lg: 8px 8px 0px 0px var(--ring, #000000);
 }
 
 @layer base {
   :root {
     --background: #FFFDF5;
     --foreground: #000000;
+    --card: #FFFFFF;
+    --card-foreground: #000000;
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+    --border: #000000;
+    --ring: #000000;
     --primary: #FDE047;
     --primary-foreground: #000000;
     --secondary: #000000;
@@ -44,14 +54,18 @@
   .dark {
     --background: #0A1128;
     --foreground: #F8FAFC;
+    --card: #1E293B;
+    --card-foreground: #F8FAFC;
+    --muted: #334155;
+    --muted-foreground: #94A3B8;
+    --border: #334155;
+    --ring: #FDE047;
     --primary: #FDE047;
     --primary-foreground: #000000;
     --secondary: #F8FAFC;
     --secondary-foreground: #0A1128;
     --warm-cream: #0A1128;
     --neoblack: #F8FAFC;
-    --border: #F8FAFC;
-    --ring: #FDE047;
   }
 
   body {
@@ -80,9 +94,17 @@
 }
 
 .grid-background {
-  background-image: radial-gradient(circle, #00000010 1px, transparent 1px);
-  background-size: 30px 30px;
-  animation: move-grid 20s linear infinite;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: move-grid 15s linear infinite;
+}
+
+.dark .grid-background {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 @keyframes move-grid {
@@ -90,6 +112,6 @@
     background-position: 0 0;
   }
   to {
-    background-position: 30px 30px;
+    background-position: 40px 40px;
   }
 }

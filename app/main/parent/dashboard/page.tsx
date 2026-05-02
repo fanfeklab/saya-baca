@@ -87,10 +87,6 @@ export default function ParentDashboard() {
     { day: 'Min', rate: 60 },
   ];
 
-  if (loading) {
-    return <div className="p-12 text-center font-heading font-black">MEMUAT...</div>;
-  }
-
   return (
     <main className="min-h-screen bg-slate-50 pt-24 sm:pt-32 pb-12 px-4 sm:px-6 max-w-4xl mx-auto">
       <TopBar />

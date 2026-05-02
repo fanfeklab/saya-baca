@@ -46,7 +46,7 @@ export function TopBar() {
       {/* Left Profile Pill */}
       <div 
         onClick={() => setProfileModalOpen(true)}
-        className="flex items-center gap-1 sm:gap-2 pointer-events-auto bg-white p-1 sm:p-1.5 rounded-full neo-border neo-shadow max-w-[200px] sm:max-w-none min-w-0 cursor-pointer hover:bg-yellow-50 transition-colors"
+        className="flex items-center gap-1 sm:gap-2 pointer-events-auto bg-card dark:bg-slate-800 p-1 sm:p-1.5 rounded-full neo-border neo-shadow max-w-[200px] sm:max-w-none min-w-0 cursor-pointer hover:bg-muted transition-colors"
       >
         <Button 
           variant="ghost" 
