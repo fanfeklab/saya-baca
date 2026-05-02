@@ -237,3 +237,13 @@ import { useQuiz } from "@/hooks";
 | **XSS** | Jangan gunakan `dangerouslySetInnerHTML` kecuali sangat terpaksa dan sudah disanitasi. |
 | **Hardcoded Tokens** | Dilarang keras. `trufflehog` akan mendeteksi di CI. |
 | **Logging** | Jangan log data sensitif (PIN, token, email lengkap). Gunakan structured logging (`pino`). |
+
+---
+
+### 11. Manajemen Data & Relasi (Anti Circular JSON)
+
+| Atribut | Deskripsi |
+|---------|-----------|
+| **Data Transfer Object (DTO)** | Semua data yang dikirim dari Server (API Route / Server Action / Server Component) ke Client Component **wajib** diproses menjadi flat object (DTO). <br/><br/>Contoh salah: Mengirim model database yang memiliki relasi bolak-balik (Object A -> Object B -> Object A).<br/>Contoh benar: Memodifikasi objek untuk hanya berisi field primitif yang diperlukan sebelum dilempar (`{ id: a.id, bId: a.b.id }`). |
+| **`import/no-cycle`** | Dilarang membuat dependensi import yang melingkar secara lokal. Deteksi dini via ESLint wajib aktif. |
+| **`flatted`** | Alternatif *last resort* jika struktur deep-graph benar-benar perlu dikirim apa adanya. DTO tetap standar utama. |

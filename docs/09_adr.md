@@ -128,3 +128,28 @@ Mencatat seluruh keputusan arsitektur signifikan yang diambil untuk SAYA BACA. S
 | **Konteks** | Kurikulum (abjad, vokal, suku kata, kalimat) memerlukan pemetaan bertahap. UI belajar tidak boleh memiliki scroll (menjaga fokus anak) sehingga butuh pagination dengan grid dinamis. Selain itu, TTS native sering salah melafalkan gabungan 2 huruf (misal: "ba" dibaca "b-a") sehingga butuh override teks khusus untuk speech. Schema Firestore harus berbahasa Inggris, meski kontennya bahasa Indonesia. |
 | **Keputusan** | 1. **Database Schema:** Menggunakan entity `ContentItem` abstrak dengan field `type` (letter, syllable, word), `text` (untuk UI), dan `speechText` (override opsional untuk TTS Native). <br/> 2. **UI Grid Engine:** Menggunakan paginated grid (contoh: 3x3) dinamis yang otomatis memotong array list dan berpindah halaman tanpa scroll. Mendukung text scaling ke depan. <br/> 3. **TTS Wrapper:** Logika pelafalan diutamakan pada `item.speechText || item.text`. |
 | **Konsekuensi** | ✅ Admin bisa inject konten via form dinamis dengan schema JSON. ✅ Anak selalu disiplin dalam grid tanpa scroll. ✅ Pelafalan TTS sangat akurat untuk suku kata. ❌ Kompleksitas dalam pengolahan pagination dinamis dan styling responsif text size. |
+
+---
+
+### 9. ADR-010: Normalisasi Data Server (Menghindari Circular JSON)
+
+| Atribut | Detail |
+|---------|--------|
+| **Status** | Disetujui |
+| **Tanggal** | 2026-05-02 |
+| **Konteks** | Terjadi risiko error saat Next.js Server Components mengirim data kompleks yang memiliki relasi melingkar (circular JSON) ke Client Components sebagai props. Webpack atau bundler internal Next.js (khususnya update versi terbaru) bisa crash atau menghasilkan payload tidak valid bila merender data referensi rekursif. |
+| **Keputusan** | Menetapkan standarisasi formating sisi server sebelum data dikirim ke frontend: <br/>1. **Gunakan DTO (Data Transfer Object)**: Bentuk representasi data sederhana/flat (plain object). Relasi resiprokal dilepas.<br/>2. **Aturan ESLint**: Menambahkan dan menegakkan rule `import/no-cycle` untuk mendeteksi dependensi file/modul yang siklik sedini mungkin di level pengembangan.<br/>3. **Penggunaan Pustaka `flatted`**: Bila mutlak membutuhkan pengiriman grafik data utuh dengan referensi melingkar, gunakan `flatted` (`parse` / `stringify`). Namun DTO tetap menjadi standar utama. |
+| **Konsekuensi** | ✅ Mencegah error crash rendering di Next.js saat pass props dari server ke client.<br/>✅ Kode API / Server action menjadi lebih bersih karena memfilter properti sebelum dikirim, mengurangi ukuran payload.<br/>❌ Ada extra effort membuat dan me-maintain interface DTO khusus respons. |
+
+---
+
+### 10. ADR-011: Upgrade ke Next.js 16.2.4 (Stable Version)
+
+| Atribut | Detail |
+|---------|--------|
+| **Status** | Disetujui |
+| **Tanggal** | 2026-05-02 |
+| **Konteks** | Tedapat notifikasi bahwa versi Webpack pada Next.js 15 telah kadaluarsa / outdated. Terdapat dua pilihan upgrade: ke versi Canary atau versi stabil 16.2.4. |
+| **Keputusan** | Menggunakan rilis **Stable 16.2.4**. Menjadikan versi ini sebagai referensi utama framework frontend SAYA BACA. |
+| **Alternatif** | Menggunakan Next.js Canary. Ditolak karena fitur terbaru tidak dibutuhkan segera dan risiko ketidakstabilan pada environment CI/CD. |
+| **Konsekuensi** | ✅ Perbaikan pada isu webpack bawaan Next 15.<br/>✅ Stabilitas framework jangka panjang di production. |
