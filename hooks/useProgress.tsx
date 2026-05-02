@@ -30,7 +30,7 @@ interface ProgressContextType {
   progress: Record<string, ModuleProgress>;
   loading: boolean;
   markLearningFinished: (moduleId: string) => Promise<void>;
-  saveQuizResult: (moduleId: string, score: number) => Promise<{ xpEarned: number }>;
+  saveQuizResult: (moduleId: string, score: number) => Promise<{ xpEarned: number, coinsEarned: number }>;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -76,10 +76,11 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         lastPracticed: serverTimestamp(),
       }, { merge: true });
 
-      // Give a small initial XP for finishing learning if first time
+      // Give a small initial XP and coins for finishing learning if first time
       if (!progress[moduleId]?.learningFinished) {
         await updateActiveProfile({
           totalXp: (activeProfile.totalXp || 0) + 50,
+          coins: (activeProfile.coins || 0) + 10,
         });
       }
     } catch (error) {
@@ -88,7 +89,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   };
 
   const saveQuizResult = async (moduleId: string, score: number) => {
-    if (!activeProfile) return { xpEarned: 0 };
+    if (!activeProfile) return { xpEarned: 0, coinsEarned: 0 };
 
     const path = `profiles/${activeProfile.id}/progress/${moduleId}`;
     try {
@@ -96,17 +97,18 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       const existing = progress[moduleId];
       const previousBest = existing?.bestQuizScore || 0;
       
-      // XP Logic: 
-      // - New high score: (newScore - previousBest) XP
-      // - Already got 100: 5 XP (participation reward)
-      // - Otherwise: 10 XP if score > 70
+      // XP & Coins Logic: 
       let xpEarned = 0;
+      let coinsEarned = 0;
       if (score > previousBest) {
         xpEarned = score - previousBest;
+        coinsEarned = Math.floor(xpEarned / 2); // 1 coin per 2 xp
       } else if (previousBest >= 100) {
         xpEarned = 5;
+        coinsEarned = 2; // participation
       } else if (score > 70) {
         xpEarned = 10;
+        coinsEarned = 5;
       }
 
       const newBest = Math.max(previousBest, score);
@@ -118,16 +120,17 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         completed: newBest >= 100
       }, { merge: true });
 
-      if (xpEarned > 0) {
+      if (xpEarned > 0 || coinsEarned > 0) {
         await updateActiveProfile({
           totalXp: (activeProfile.totalXp || 0) + xpEarned,
+          coins: (activeProfile.coins || 0) + coinsEarned,
         });
       }
 
-      return { xpEarned };
+      return { xpEarned, coinsEarned };
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, path);
-      return { xpEarned: 0 };
+      return { xpEarned: 0, coinsEarned: 0 };
     }
   };
 

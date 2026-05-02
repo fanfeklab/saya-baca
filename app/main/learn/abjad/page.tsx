@@ -23,6 +23,7 @@ import { useSearchParams } from 'next/navigation';
 import { useProgress } from '@/hooks/useProgress';
 import { QuizResultView } from '@/components/organisms/QuizResultView';
 import { QuizComponent } from '@/components/organisms/QuizComponent';
+import { useGameStore } from '@/store/useGameStore';
 
 function AbjadPageContent() {
   const { speak } = useTTS();
@@ -37,6 +38,9 @@ function AbjadPageContent() {
   const [selected, setSelected] = React.useState<string | null>(null);
   const [quizScore, setQuizScore] = React.useState(0);
   const [xpGained, setXpGained] = React.useState(0);
+  const [coinsEarned, setCoinsEarned] = React.useState(0);
+  const addCoins = useGameStore(state => state.addCoins);
+  const addGlobalExp = useGameStore(state => state.addGlobalExp);
 
   const generateAbjadQuestions = React.useCallback(() => {
     const questions = [];
@@ -65,14 +69,19 @@ function AbjadPageContent() {
 
   const handleFinishLearning = async () => {
     await markLearningFinished('abjad');
+    addGlobalExp(50);
+    addCoins(10);
     speak("Hebat! Kamu sudah menyelesaikan materi abjad. Sekarang waktunya latihan soal!");
     router.push('/main/home');
   };
 
   const handleQuizComplete = async (score: number) => {
-    const { xpEarned } = await saveQuizResult('abjad', score);
+    const { xpEarned, coinsEarned: cEarned } = await saveQuizResult('abjad', score);
     setQuizScore(score);
     setXpGained(xpEarned);
+    setCoinsEarned(cEarned);
+    addGlobalExp(xpEarned);
+    addCoins(cEarned);
     setView('result');
   };
 
@@ -91,6 +100,7 @@ function AbjadPageContent() {
       <QuizResultView 
         score={quizScore}
         xpGained={xpGained}
+        coinsEarned={coinsEarned}
         onRetry={() => {
           setView('quiz');
         }}
@@ -101,7 +111,6 @@ function AbjadPageContent() {
 
   return (
     <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
-      <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
         <header className="flex items-center gap-4 shrink-0">

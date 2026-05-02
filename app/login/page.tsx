@@ -18,7 +18,7 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      router.push('/main/home');
+      router.push('/profiles');
     } catch (error) {
       console.error("Login failed:", error);
       alert("Gagal masuk. Silakan coba lagi.");
@@ -27,11 +27,18 @@ export default function LoginPage() {
     }
   };
 
-  const handleGuestLogin = () => {
-    // For guest access without saving to DB immediately
-    // Or we could implement Firebase Anonymous Auth if requested.
-    // Assuming just navigating to home for limited access or offline.
-    router.push('/main/home');
+  const handleGuestLogin = async () => {
+    setLoading(true);
+    try {
+      const { signInAnonymously } = await import('firebase/auth');
+      await signInAnonymously(auth);
+      router.push('/profiles');
+    } catch (error) {
+       console.error("Guest login failed:", error);
+       alert("Gagal masuk sebagai tamu. Silakan coba lagi.");
+    } finally {
+       setLoading(false);
+    }
   };
 
   return (

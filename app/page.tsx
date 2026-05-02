@@ -35,7 +35,7 @@ export default function LandingPage() {
 
   // If already logged in, show a different CTA
   const ctaLabel = user ? "LANJUTKAN BELAJAR" : "MULAI SEKARANG";
-  const ctaAction = user ? () => router.push('/main/home') : handleParentStart;
+  const ctaAction = user ? () => router.push('/profiles') : handleParentStart;
 
   return (
     <div className="min-h-screen relative z-10 selection:bg-yellow-200 overflow-x-hidden transition-colors duration-300">

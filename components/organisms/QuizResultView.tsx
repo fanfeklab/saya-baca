@@ -3,17 +3,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/atoms/button';
-import { Sparkles, Star, Trophy, ArrowRight, RotateCcw } from 'lucide-react';
+import { Sparkles, Star, Trophy, ArrowRight, RotateCcw, Coins } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface QuizResultViewProps {
   score: number;
   xpGained: number;
+  coinsEarned?: number;
   onRetry: () => void;
   onFinish: () => void;
 }
 
-export function QuizResultView({ score, xpGained, onRetry, onFinish }: QuizResultViewProps) {
+export function QuizResultView({ score, xpGained, coinsEarned = 0, onRetry, onFinish }: QuizResultViewProps) {
   React.useEffect(() => {
     if (score >= 80) {
       confetti({
@@ -50,16 +51,23 @@ export function QuizResultView({ score, xpGained, onRetry, onFinish }: QuizResul
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-            <div className="bg-muted p-6 rounded-[2rem] neo-border">
+        <div className="grid grid-cols-3 gap-3">
+            <div className="bg-muted p-4 sm:p-6 rounded-[2rem] neo-border flex-1">
                 <p className="text-[10px] font-black text-foreground/40  uppercase mb-1">Skor</p>
-                <p className="text-4xl font-black font-heading text-foreground  leading-none">{score}</p>
+                <p className="text-2xl sm:text-4xl font-black font-heading text-foreground  leading-none">{score}</p>
             </div>
-            <div className="bg-blue-50  p-6 rounded-[2rem] neo-border border-blue-500/20">
+            <div className="bg-blue-50 p-4 sm:p-6 rounded-[2rem] neo-border border-blue-500/20 flex-1">
                 <p className="text-[10px] font-black text-blue-500/60 uppercase mb-1">+XP</p>
                 <div className="flex items-center justify-center gap-1">
-                    <Sparkles size={20} className="text-blue-500" />
-                    <p className="text-4xl font-black font-heading text-blue-500 leading-none">{xpGained}</p>
+                    <Sparkles size={16} className="text-blue-500" />
+                    <p className="text-2xl sm:text-4xl font-black font-heading text-blue-500 leading-none">{xpGained}</p>
+                </div>
+            </div>
+            <div className="bg-yellow-50 p-4 sm:p-6 rounded-[2rem] neo-border border-yellow-500/20 flex-1">
+                <p className="text-[10px] font-black text-yellow-500/60 uppercase mb-1">+Koin</p>
+                <div className="flex items-center justify-center gap-1">
+                    <Coins size={16} className="text-yellow-500" />
+                    <p className="text-2xl sm:text-4xl font-black font-heading text-yellow-500 leading-none">{coinsEarned}</p>
                 </div>
             </div>
         </div>

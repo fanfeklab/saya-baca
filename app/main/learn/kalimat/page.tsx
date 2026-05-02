@@ -6,10 +6,11 @@ import { useTTS } from '@/hooks/useTTS';
 import { TopBar } from '@/components/organisms/TopBar';
 import { Button } from '@/components/atoms/button';
 import { Card } from '@/components/atoms/card';
-import { ArrowLeft, CheckCircle2, ChevronRight, Play } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ChevronRight, Play, HeartCrack } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { useProgress } from '@/hooks/useProgress';
+import { useGameStore } from '@/store/useGameStore';
 
 import { useSearchParams } from 'next/navigation';
 import { QuizResultView } from '@/components/organisms/QuizResultView';
@@ -30,11 +31,18 @@ function KalimatPageContent() {
   const [showFeedback, setShowFeedback] = React.useState(false);
   const [quizScore, setQuizScore] = React.useState(0);
   const [xpGained, setXpGained] = React.useState(0);
+  const [coinsEarned, setCoinsEarned] = React.useState(0);
 
   const current = SENTENCE_TRIALS[currentIdx];
+  const decreaseEnergy = useGameStore(state => state.decreaseEnergy);
+  const energy = useGameStore(state => state.energy);
+  const addCoins = useGameStore(state => state.addCoins);
+  const addGlobalExp = useGameStore(state => state.addGlobalExp);
 
   const handleOptionClick = (word: string) => {
     if (answers.length < current.correctWords.length) {
+      if (answers.includes(word)) return; // prevent duplicate clicks if we want
+      
       const newAnswers = [...answers, word];
       setAnswers(newAnswers);
       speak(word);
@@ -60,19 +68,32 @@ function KalimatPageContent() {
           // Learning finished
           if (view === 'learn') {
             await markLearningFinished('sentence');
+            addGlobalExp(50);
+            addCoins(10);
             speak("Luar biasa! Kamu sudah bisa menyusun kalimat. Sekarang coba kuisnya ya!");
             router.push('/main/home');
           } else {
             // If it was a "Quiz" mode (maybe we use different trials for quiz later)
             const score = 100; // Simplified for this interactive module
-            const { xpEarned } = await saveQuizResult('sentence', score);
+            const { xpEarned, coinsEarned: cEarned } = await saveQuizResult('sentence', score);
             setQuizScore(score);
             setXpGained(xpEarned);
+            setCoinsEarned(cEarned);
+            addGlobalExp(xpEarned);
+            addCoins(cEarned);
             setView('result');
           }
         }
       }, 2000);
     } else {
+      decreaseEnergy();
+      if (energy - 1 <= 0) {
+         speak('Yaah, nyawa kamu habis. Kita istirahat dulu ya!');
+         setTimeout(() => {
+            router.push('/main/home');
+         }, 3000);
+         return;
+      }
       speak("Coba lagi, susunannya belum tepat.");
       setTimeout(() => setAnswers([]), 1000);
     }
@@ -96,6 +117,7 @@ function KalimatPageContent() {
       <QuizResultView 
         score={quizScore}
         xpGained={xpGained}
+        coinsEarned={coinsEarned}
         onRetry={() => {
             setCurrentIdx(0);
             setAnswers([]);
@@ -106,9 +128,18 @@ function KalimatPageContent() {
     );
   }
 
+  if (energy <= 0) {
+    return (
+      <main className="fixed inset-0 overflow-hidden flex flex-col items-center justify-center p-6 bg-background text-center">
+        <HeartCrack size={80} className="text-red-500 mb-6 animate-pulse" />
+        <h1 className="font-heading font-black text-4xl uppercase mb-2">Kehabisan Nyawa!</h1>
+        <p className="font-sans text-xl font-bold text-foreground/60">Tunggu nyawamu pulih untuk belajar lagi.</p>
+      </main>
+    );
+  }
+
   return (
     <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
-      <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
         <header className="flex items-center gap-4 shrink-0">

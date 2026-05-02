@@ -23,6 +23,10 @@ export interface ChildProfile {
   totalXp: number;
   currentLevel: number;
   currentStreak: number;
+  longestStreak: number;
+  energy: number;
+  coins: number;
+  lastEnergyRefillAt: any;
   lastActivityAt: any;
   settings: {
     timerMinutes: number;
@@ -113,6 +117,10 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
       totalXp: 0,
       currentLevel: 1,
       currentStreak: 0,
+      longestStreak: 0,
+      energy: 5,
+      coins: 0,
+      lastEnergyRefillAt: serverTimestamp(),
       lastActivityAt: serverTimestamp(),
       settings: {
         timerMinutes: 30,

@@ -38,11 +38,17 @@ export default function ParentDashboard() {
       const userDoc = await getDoc(userRef);
       const savedPin = userDoc.data()?.parentPin;
 
-      if (pin === savedPin) {
+      if (!savedPin && pin === '1234') {
+        verifyParentPin(true);
+        setPinError(undefined);
+        return;
+      }
+
+      if (pin === savedPin || (!savedPin && pin === '1234')) {
         verifyParentPin(true);
         setPinError(undefined);
       } else {
-        setPinError("PIN SALAH");
+        setPinError(!savedPin ? "PIN DEFAULT: 1234" : "PIN SALAH");
       }
     } catch (e) {
       setPinError("GANGGUAN SERVER");
@@ -97,12 +103,30 @@ export default function ParentDashboard() {
             <h1 className="font-heading text-4xl font-black text-foreground uppercase tracking-tight">Parent Dashboard</h1>
             <p className="font-sans font-bold text-foreground/60 italic">Pantau perkembangan si kecil di sini.</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button variant="outline" onClick={() => router.push('/main/home')} className="rounded-xl flex gap-2">
               <ArrowLeft size={18} /> BALIK KE BELAJAR
             </Button>
-            <Button variant="destructive" onClick={() => signOut()} className="rounded-xl">
-               <LogOut size={18} />
+            {user?.isAnonymous && (
+              <Button variant="destructive" onClick={async () => {
+                if(confirm("Apakah Anda yakin ingin menghapus akun tamu dan semua datanya?")) {
+                  try {
+                    await user.delete();
+                    router.push('/');
+                  } catch(e) {
+                    console.error(e);
+                    alert("Gagal menghapus data. Coba logout saja.");
+                  }
+                }
+              }} className="rounded-xl font-bold bg-red-600 hover:bg-red-700 text-white">
+                HAPUS DATA TAMU
+              </Button>
+            )}
+            <Button variant="outline" onClick={async () => {
+              await signOut();
+              router.push('/');
+            }} className="rounded-xl">
+               <LogOut size={18} className="mr-2" /> LOGOUT
             </Button>
           </div>
         </header>

@@ -12,6 +12,7 @@ import { QuizResultView } from '@/components/organisms/QuizResultView';
 import { QuizComponent } from '@/components/organisms/QuizComponent';
 import { useTTS } from '@/hooks/useTTS';
 import { SYLLABLES_POOL } from '@/lib/constants';
+import { useGameStore } from '@/store/useGameStore';
 
 // Helper to generate a line of syllables
 let idCount = 0;
@@ -61,6 +62,9 @@ function SukuKataPageContent() {
   const [view, setView] = React.useState<'learn' | 'quiz' | 'result'>(initialMode);
   const [quizScore, setQuizScore] = React.useState(0);
   const [xpGained, setXpGained] = React.useState(0);
+  const [coinsEarned, setCoinsEarned] = React.useState(0);
+  const addCoins = useGameStore(state => state.addCoins);
+  const addGlobalExp = useGameStore(state => state.addGlobalExp);
 
   const generateSyllableQuestions = React.useCallback(() => {
     const questions = [];
@@ -80,14 +84,19 @@ function SukuKataPageContent() {
 
   const handleFinishLearning = async () => {
     await markLearningFinished('syllable');
+    addGlobalExp(50);
+    addCoins(10);
     speak("Hebat! Materi suku kata selesai. Mari kita uji kemampuanmu!");
     router.push('/main/home');
   };
 
   const handleQuizComplete = async (score: number) => {
-    const { xpEarned } = await saveQuizResult('syllable', score);
+    const { xpEarned, coinsEarned: cEarned } = await saveQuizResult('syllable', score);
     setQuizScore(score);
     setXpGained(xpEarned);
+    setCoinsEarned(cEarned);
+    addGlobalExp(xpEarned);
+    addCoins(cEarned);
     setView('result');
   };
 
@@ -106,6 +115,7 @@ function SukuKataPageContent() {
       <QuizResultView 
         score={quizScore}
         xpGained={xpGained}
+        coinsEarned={coinsEarned}
         onRetry={() => setView('quiz')}
         onFinish={() => router.push('/main/home')}
       />
@@ -114,7 +124,6 @@ function SukuKataPageContent() {
 
   return (
     <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
-      <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
         <header className="flex items-center gap-4 shrink-0">

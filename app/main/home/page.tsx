@@ -1,7 +1,5 @@
 'use client';
 
-import { TopBar } from '@/components/organisms/TopBar';
-import { BottomNav } from '@/components/organisms/BottomNav';
 import { ModuleCard } from '@/components/molecules/ModuleCard';
 import { motion } from 'framer-motion';
 import { useTTS } from '@/hooks/useTTS';
@@ -100,8 +98,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen pt-24 sm:pt-32 pb-40 px-4 sm:px-6 max-w-lg mx-auto overflow-x-hidden bg-background">
-      <TopBar />
+    <main className="relative pt-24 sm:pt-32 pb-40 px-4 sm:px-6 max-w-lg mx-auto overflow-x-hidden bg-background">
       
       <section className="space-y-6 sm:space-y-8">
         <header className="flex items-center justify-between gap-4">
@@ -178,8 +175,6 @@ export default function HomePage() {
         onStartLearning={() => startModule('learn')}
         onStartQuiz={() => startModule('quiz')}
       />
-
-      <BottomNav />
     </main>
   );
 }
