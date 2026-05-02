@@ -29,8 +29,8 @@
 - [ ] Parent Guard (PIN Logic + 60s Lockout + Reset via Email) (AC-006, AC-008)
 - [ ] Progress Tracker (Firestore Sync: Word mastery, XP, Streaks) (AC-201, AC-204)
 - [ ] Quiz Engine (Sequence unlocking logic: Modul 1 -> Modul 2) (AC-114)
-- [ ] UI Grid Engine (Pagination dinamis, no-scroll UI) untuk Learn Pages
-- [ ] TTS Override Logic (Logika baca `speechText` vs `displayText`)
+- [x] UI Grid Engine (Pagination dinamis, no-scroll UI) untuk Learn Pages
+- [x] TTS Override Logic (Logika baca `speechText` vs `displayText`)
 
 ## 🎮 Phase 4: Modules & Gamification [ON HOLD]
 - [ ] Module: Mengenal Abjad (Visual + TTS + Quiz) (AC-102)

@@ -11,7 +11,14 @@ import { useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { QuizModal } from '@/components/organisms/QuizModal';
 
+import { PaginatedGrid, GridItem } from '@/components/organisms/PaginatedGrid';
+
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const ALPHABET_ITEMS = ALPHABET.map((letter) => ({
+  id: letter,
+  text: letter,
+  speechText: letter // For single letter, we just pass the letter
+}));
 
 const EXAMPLES: Record<string, { word: string, icon: string }> = {
   'A': { word: 'APEL', icon: '🍎' },
@@ -69,7 +76,6 @@ export default function AbjadPage() {
 
   const handleLetterClick = (letter: string) => {
     setSelected(letter);
-    speak(letter);
     
     // Auto speak example after a short delay
     setTimeout(() => {
@@ -140,22 +146,14 @@ export default function AbjadPage() {
           )}
         </AnimatePresence>
 
-        <div className="grid grid-cols-4 sm:grid-cols-5 gap-3 sm:gap-4 pb-20">
-          {ALPHABET.map((letter) => (
-            <motion.button
-              key={letter}
-              whileHover={{ scale: 1.05, rotate: 2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleLetterClick(letter)}
-              className={cn(
-                "aspect-square rounded-2xl neo-border neo-shadow flex items-center justify-center text-3xl font-black font-heading transition-colors",
-                selected === letter ? "bg-yellow-400" : "bg-white hover:bg-yellow-50"
-              )}
-            >
-              {letter}
-            </motion.button>
-          ))}
-        </div>
+        <PaginatedGrid
+          rows={3}
+          cols={3}
+          items={ALPHABET_ITEMS}
+          selectedId={selected}
+          onItemClick={(item) => handleLetterClick(item.text)}
+          className="pb-20"
+        />
       </div>
     </main>
   );

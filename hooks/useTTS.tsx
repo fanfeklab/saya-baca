@@ -26,7 +26,14 @@ export function TTSProvider({ children }: { children: React.ReactNode }) {
     // Stop current speech
     synthRef.current.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Process text for better pronunciation (especially indonesian syllables)
+    let processedText = text.trim();
+    // Jika 2 huruf (misal: "ba", "ca"), tambahkan titik di akhir dan jadikan lowercase agar dibaca sebagai satu kata utuh, bukan singkatan B-A
+    if (processedText.length === 2 && /^[a-zA-Z]{2}$/.test(processedText)) {
+      processedText = processedText.toLowerCase() + ".";
+    }
+
+    const utterance = new SpeechSynthesisUtterance(processedText);
     utterance.lang = 'id-ID'; // Indonesian
     utterance.rate = 0.9; // Slightly slower for kids
     
