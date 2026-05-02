@@ -25,19 +25,18 @@ export function XPProgressBar({
   return (
     <div className={cn("flex flex-col gap-2 w-full", className)} {...props}>
       {(label || showPoints) && (
-        <div className="flex justify-between items-center text-sm font-bold text-amber-500 drop-shadow-sm">
+        <div className="flex justify-between items-center text-[10px] font-black text-black dark:text-white uppercase tracking-widest leading-none">
           <div className="flex items-center gap-1">
-            {showIcon && <Zap className="w-4 h-4 fill-amber-500" />}
-            <span className="uppercase tracking-wider">{label}</span>
+            {showIcon && <Zap size={12} className="fill-amber-400 stroke-black stroke-[2px]" />}
+            <span>{label}</span>
           </div>
           {showPoints && <span>{value} / {max}</span>}
         </div>
       )}
-      <div className="relative">
-        <div className="absolute inset-0 bg-amber-400 blur-sm opacity-20 rounded-full" />
-        <Progress 
-          value={percentage} 
-          className="h-3 bg-white/30 dark:bg-black/30 backdrop-blur-md [&>div]:bg-amber-400 [&>div]:shadow-[0_0_10px_rgba(251,191,36,0.8)]" 
+      <div className="relative h-4 bg-white neo-border rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-amber-400 border-r-2 border-black transition-all duration-500 ease-out"
+          style={{ width: `${percentage}%` }}
         />
       </div>
     </div>

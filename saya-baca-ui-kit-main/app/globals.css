@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-wisdom-violet: #8B5CF6;
+  --color-wisdom-violet-dark: #5B21B6;
+  --color-luminous-yellow: #FDE047;
+  --color-vibrant-orange: #F97316;
+  --color-lime: #84CC16;
+
+  --color-bg-light: #FFFBEB;
+  --color-bg-dark: #1E2B4D;
+
+  --color-border-neo-light: #000000;
+  --color-border-neo-dark: #000000;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --shadow-neo: 4px 4px 0 0 #000000;
+  --shadow-neo-lg: 8px 8px 0 0 #000000;
+  --shadow-neo-sm: 2px 2px 0 0 #000000;
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --radius-neo: 0.75rem;
+  --radius: var(--radius-neo);
+  --radius-md: calc(var(--radius-neo) - 2px);
+  --radius-sm: calc(var(--radius-neo) - 4px);
+}
+
+@layer base {
+  :root {
+    --background: var(--color-bg-light);
+    --foreground: #000000;
+
+    --card: var(--color-bg-light);
+    --card-foreground: #000000;
+
+    --popover: var(--color-bg-light);
+    --popover-foreground: #000000;
+
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+
+    --primary: var(--color-wisdom-violet);
+    --primary-foreground: #FFFFFF;
+
+    --secondary: var(--color-luminous-yellow);
+    --secondary-foreground: #000000;
+
+    --accent: var(--color-vibrant-orange);
+    --accent-foreground: #000000;
+
+    --success: var(--color-lime);
+    --success-foreground: #000000;
+
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+
+    --border: var(--color-border-neo-light);
+    --input: var(--color-border-neo-light);
+    --ring: var(--color-wisdom-violet);
+
+    --radius: var(--radius-neo);
+  }
+
+  .dark {
+    --background: var(--color-bg-dark);
+    --foreground: #FFFFFF;
+
+    --card: var(--color-bg-dark);
+    --card-foreground: #FFFFFF;
+
+    --popover: var(--color-bg-dark);
+    --popover-foreground: #FFFFFF;
+
+    --muted: #334155;
+    --muted-foreground: #94a3b8;
+
+    --primary: var(--color-wisdom-violet);
+    --primary-foreground: #FFFFFF;
+
+    --secondary: var(--color-luminous-yellow);
+    --secondary-foreground: #000000;
+
+    --accent: var(--color-vibrant-orange);
+    --accent-foreground: #000000;
+
+    --border: var(--color-border-neo-dark);
+    --input: var(--color-border-neo-dark);
+    --ring: var(--color-luminous-yellow);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+}
+
+@keyframes float-space {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10px, 15px) rotate(2deg); }
+  66% { transform: translate(-5px, 20px) rotate(-1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.animate-float-space {
+  animation: float-space 25s ease-in-out infinite;
+}
+
+.blur-pulse {
+  animation: blur-pulse 15s ease-in-out infinite;
+}
+
+@keyframes blur-pulse {
+  0%, 100% { filter: blur(2px); opacity: 0.2; }
+  50% { filter: blur(8px); opacity: 0.1; }
+}
+
+.nav-blur-edge {
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+}

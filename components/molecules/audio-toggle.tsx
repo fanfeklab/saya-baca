@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Volume2, VolumeX } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/atoms/button"
 
 export function AudioToggle({ className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
@@ -15,10 +16,10 @@ export function AudioToggle({ className, ...props }: React.ButtonHTMLAttributes<
 
   return (
     <Button
-      variant="glass"
+      variant="outline"
       size="icon"
       onClick={toggleMute}
-      className={className}
+      className={cn("bg-white neo-border neo-shadow neo-shadow-active rounded-xl", className)}
       {...props}
     >
       {isMuted ? (

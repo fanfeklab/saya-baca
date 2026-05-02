@@ -1,0 +1,29 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Trigger deployment on version tags
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build and Deploy (Placeholder)
+      run: |
+        echo "Replace this with actual deployment commands."
+        echo "For example, to deploy to Vercel: npx vercel --prod --token=\$VERCEL_TOKEN"
+        echo "To deploy to Cloud Run: gcloud run deploy ..."

@@ -9,19 +9,18 @@ export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
-  ({ className, children, hoverEffect = true, ...props }, ref) => {
+  ({ className, children, ...props }, ref) => {
     return (
-      <GlassPanel
+      <div
         ref={ref}
         className={cn(
-          "p-6 flex flex-col gap-4",
-          hoverEffect && "transition-all duration-300 hover:shadow-[0_16px_48px_rgba(0,0,0,0.12)] hover:-translate-y-1",
+          "bg-white neo-border neo-shadow p-6 flex flex-col gap-4 rounded-2xl",
           className
         )}
         {...props}
       >
         {children}
-      </GlassPanel>
+      </div>
     )
   }
 )

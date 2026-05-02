@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 const avatarVariants = cva(
-  "relative flex shrink-0 overflow-hidden rounded-full ring-2 ring-white dark:ring-slate-900",
+  "relative flex shrink-0 overflow-hidden rounded-2xl neo-border bg-white shadow-none",
   {
     variants: {
       size: {
         sm: "h-8 w-8 text-xs",
         default: "h-10 w-10 text-sm",
-        lg: "h-14 w-14 text-base ring-4",
-        xl: "h-20 w-20 text-lg ring-4",
+        lg: "h-16 w-16 text-base",
+        xl: "h-24 w-24 text-xl",
       },
     },
     defaultVariants: {

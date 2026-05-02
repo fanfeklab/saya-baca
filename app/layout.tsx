@@ -1,16 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
+import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import MeshGradientBg from '@/components/atoms/mesh-gradient-bg';
+import { BackgroundOrchestra } from '@/components/background-orchestra';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Saya Baca Premium',
-  description: 'A premium immersive learning application for children.',
+  title: 'Saya Baca - App',
+  description: 'Aplikasi edukasi anak TK dengan gamifikasi dan fitur orang tua.',
 };
 
 export default function RootLayout({
@@ -19,13 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased font-sans flex flex-col min-h-screen text-slate-900 dark:text-slate-100`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider delay={0}>
-            <MeshGradientBg />
-            {children}
-          </TooltipProvider>
+    <html lang="id" suppressHydrationWarning>
+      <body className={`${spaceGrotesk.variable} antialiased font-sans`}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <BackgroundOrchestra />
+          {children}
         </ThemeProvider>
       </body>
     </html>
