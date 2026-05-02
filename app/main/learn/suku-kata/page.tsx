@@ -5,102 +5,145 @@ import { useRouter } from 'next/navigation';
 import { TopBar } from '@/components/organisms/TopBar';
 import { Button } from '@/components/atoms/button';
 import { ArrowLeft } from 'lucide-react';
-import { QuizModal } from '@/components/organisms/QuizModal';
 import { ReadingBoard, ReadingPageData, ReadingItem } from '@/components/organisms/ReadingBoard';
-
-const CONSONANTS = "BCDFGHJKLMNPQRSTVWXYZ".split("");
-const VOWELS = "AIUEO".split("");
+import { useSearchParams } from 'next/navigation';
+import { useProgress } from '@/hooks/useProgress';
+import { QuizResultView } from '@/components/organisms/QuizResultView';
+import { QuizComponent } from '@/components/organisms/QuizComponent';
+import { useTTS } from '@/hooks/useTTS';
+import { SYLLABLES_POOL } from '@/lib/constants';
 
 // Helper to generate a line of syllables
 let idCount = 0;
 const genLine = (syllables: string[]): ReadingItem[] => {
-  return syllables.map(s => ({ id: `id-${idCount++}`, text: s }));
+  return syllables.map(s => ({ id: `id-${idCount++}`, text: s.toUpperCase() }));
 };
 
 // Generate pages
-const pages: ReadingPageData[] = [];
-
-// Page 1: Vowels
-pages.push({
-  title: "Mengenal Huruf Vokal",
-  lines: [
-    genLine(["A", "I", "U", "E", "O"]),
-    genLine(["A", "A", "I", "I", "U"]),
-    genLine(["E", "E", "O", "O", "A"]),
-    genLine(["A", "I", "U", "E", "O"]),
-  ]
-});
-
-// Generate consonant pages
-CONSONANTS.slice(0, 5).forEach(c => { // Currently generating first 5 to avoid massive array, could be expanded
-  const cLower = c.toLowerCase();
-  const vList = ["a", "i", "u", "e", "o"];
-  
-  pages.push({
-    title: `Segmen Membaca ${c}`,
+const PAGES_DATA: ReadingPageData[] = [
+  {
+    title: "Mengenal Huruf Vokal",
     lines: [
-      genLine(vList.map(v => cLower + v)), // ba bi bu be bo
-      genLine(["a", "a", "a", cLower, cLower, cLower]),
-      genLine(vList.slice(0,1).map(v => Array(5).fill(cLower+v)).flat()), // ba ba ba ba ba
-      genLine(["a", cLower+"a", "a", cLower+"a", "a", cLower+"a"]),
-      genLine([cLower+"a", cLower+"a", "a", cLower+"a", "a", cLower+"a", cLower+"a", "a", cLower+"a"])
+      genLine(["A", "I", "U", "E", "O"]),
+      genLine(["A", "A", "I", "I", "U"]),
+      genLine(["E", "E", "O", "O", "A"]),
     ]
-  });
-});
+  },
+  {
+    title: "Membaca BA-CA",
+    lines: [
+      genLine(["BA", "BI", "BU", "BE", "BO"]),
+      genLine(["CA", "CI", "CU", "CE", "CO"]),
+      genLine(["BA", "CA", "BU", "KU"]),
+      genLine(["BA", "BA", "CA", "CA"]),
+    ]
+  },
+  {
+    title: "Membaca DA-DA",
+    lines: [
+      genLine(["DA", "DI", "DU", "DE", "DO"]),
+      genLine(["GA", "GI", "GU", "GE", "GO"]),
+      genLine(["DA", "SI", "GA", "JI"]),
+      genLine(["GU", "A", "DA", "I"]),
+    ]
+  }
+];
 
-export default function SukuKataPage() {
+function SukuKataPageContent() {
   const router = useRouter();
-  const [showQuiz, setShowQuiz] = React.useState(false);
+  const searchParams = useSearchParams();
+  const { markLearningFinished, saveQuizResult } = useProgress();
+  const { speak } = useTTS();
 
-  // Mock quiz generator
+  const modeParam = searchParams.get('mode') as 'learn' | 'quiz' | null;
+  const initialMode = modeParam || 'learn';
+
+  const [view, setView] = React.useState<'learn' | 'quiz' | 'result'>(initialMode);
+  const [quizScore, setQuizScore] = React.useState(0);
+  const [xpGained, setXpGained] = React.useState(0);
+
   const generateSyllableQuestions = React.useCallback(() => {
-    return [
-      { id: 'qs-1', question: 'ba', correctAnswer: 'ba', options: ['ba', 'bi', 'bu', 'be'], type: 'syllable' as const },
-      { id: 'qs-2', question: 'ca', correctAnswer: 'ca', options: ['ca', 'ci', 'cu', 'ce'], type: 'syllable' as const },
-      { id: 'qs-3', question: 'da', correctAnswer: 'da', options: ['da', 'di', 'du', 'de'], type: 'syllable' as const },
-    ];
+    const questions = [];
+    for (let i = 0; i < 5; i++) {
+        const correct = SYLLABLES_POOL[Math.floor(Math.random() * SYLLABLES_POOL.length)];
+        const others = SYLLABLES_POOL.filter(a => a !== correct).sort(() => 0.5 - Math.random()).slice(0, 3);
+        questions.push({
+          id: `qs-${i}`,
+          question: correct,
+          correctAnswer: correct,
+          options: [...others, correct].sort(() => 0.5 - Math.random()),
+          type: 'suku-kata' as const
+        });
+    }
+    return questions;
   }, []);
 
+  const handleFinishLearning = async () => {
+    await markLearningFinished('syllable');
+    speak("Hebat! Materi suku kata selesai. Mari kita uji kemampuanmu!");
+    router.push('/main/home');
+  };
+
+  const handleQuizComplete = async (score: number) => {
+    const { xpEarned } = await saveQuizResult('syllable', score);
+    setQuizScore(score);
+    setXpGained(xpEarned);
+    setView('result');
+  };
+
+  if (view === 'quiz') {
+    return (
+      <QuizComponent 
+        questions={generateSyllableQuestions()}
+        onComplete={handleQuizComplete}
+        onCancel={() => router.push('/main/home')}
+      />
+    );
+  }
+
+  if (view === 'result') {
+    return (
+      <QuizResultView 
+        score={quizScore}
+        xpGained={xpGained}
+        onRetry={() => setView('quiz')}
+        onFinish={() => router.push('/main/home')}
+      />
+    );
+  }
+
   return (
-    <main className="relative min-h-screen pt-24 pb-12 px-6 max-w-xl mx-auto bg-warm-cream">
+    <main className="fixed inset-0 bg-warm-cream dark:bg-background overflow-hidden flex flex-col pt-20 pb-8 px-6">
       <TopBar />
       
-      <div className="space-y-8">
-        <header className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" onClick={() => router.back()} className="rounded-full shrink-0">
-              <ArrowLeft />
-            </Button>
-            <div>
-              <h1 className="font-heading text-xl sm:text-3xl font-black text-neoblack uppercase">Suku Kata</h1>
-              <p className="font-sans text-xs sm:text-sm font-bold text-neoblack/60 italic">Mari membaca bersama!</p>
-            </div>
-          </div>
-          <Button 
-            variant="default" 
-            className="rounded-full bg-blue-400 text-white font-black h-12"
-            onClick={() => setShowQuiz(true)}
-          >
-            MULAI QUIZ
+      <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
+        <header className="flex items-center gap-4 shrink-0">
+          <Button variant="outline" size="icon" onClick={() => router.push('/main/home')} className="rounded-full neo-border shrink-0">
+            <ArrowLeft />
           </Button>
+          <div className="min-w-0">
+            <h1 className="font-heading text-xl md:text-2xl font-black text-neoblack dark:text-foreground uppercase truncate">Mengenal Vokal</h1>
+            <p className="font-sans text-[10px] font-bold text-neoblack/60 dark:text-foreground/60 italic leading-none">Ketuk tulisan untuk mendengar</p>
+          </div>
         </header>
 
-        {showQuiz && (
-          <QuizModal 
-            questions={generateSyllableQuestions()}
-            moduleId="syllable"
-            onClose={() => setShowQuiz(false)}
-            onComplete={() => {
-              setShowQuiz(false);
-            }}
-          />
-        )}
-
-        <ReadingBoard 
-          pages={pages} 
-          onFinish={() => setShowQuiz(true)}
-        />
+        <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 rounded-[2.5rem] neo-border neo-shadow p-4 md:p-8 flex flex-col items-center justify-center overflow-hidden">
+           <ReadingBoard 
+              pages={PAGES_DATA} 
+              onFinish={handleFinishLearning}
+              className="h-full"
+           />
+        </div>
       </div>
     </main>
   );
 }
+
+export default function SukuKataPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-warm-cream dark:bg-background flex items-center justify-center font-heading font-black">MEMUAT...</div>}>
+      <SukuKataPageContent />
+    </React.Suspense>
+  );
+}
+

@@ -16,6 +16,45 @@ import React from 'react';
 
 import { Button } from '@/components/atoms/button';
 
+import { ModuleOverviewPopup } from '@/components/organisms/ModuleOverviewPopup';
+
+interface ModuleData {
+  id: string;
+  title: string;
+  desc: string;
+  color: string;
+  icon: string;
+  path: string;
+  locked?: boolean;
+}
+
+const MODULES: ModuleData[] = [
+  { 
+    id: 'abjad', 
+    title: "Mengenal Abjad", 
+    desc: "Petualangan seru mengenal huruf A sampai Z dengan suara!", 
+    color: "bg-pink-400", 
+    icon: "🍎", 
+    path: "/main/learn/abjad" 
+  },
+  { 
+    id: 'syllable', 
+    title: "Suku Kata", 
+    desc: "Ayo belajar membaca gabungan huruf! Ba, Ci, Du...", 
+    color: "bg-blue-400", 
+    icon: "🗣️", 
+    path: "/main/learn/suku-kata" 
+  },
+  { 
+    id: 'sentence', 
+    title: "Merakit Kalimat", 
+    desc: "Hebat! Sekarang waktunya menyusun kata jadi kalimat.", 
+    color: "bg-green-400", 
+    icon: "📚", 
+    path: "/main/learn/kalimat" 
+  }
+];
+
 export default function HomePage() {
   const { speak } = useTTS();
   const { isAdmin } = useAuth();
@@ -23,11 +62,16 @@ export default function HomePage() {
   const { progress } = useProgress();
   const router = useRouter();
   const [seeding, setSeeding] = React.useState(false);
+  
+  const [selectedModule, setSelectedModule] = React.useState<ModuleData | null>(null);
 
-  // AC-114 Logic: Suku Kata requires Abjad completion
-  const abjadMastery = progress['abjad']?.mastery || 0;
-  const isSyllableLocked = abjadMastery < 100;
-  const isSentenceLocked = (progress['syllable']?.mastery || 0) < 100;
+  // Lock logic
+  const getIsLocked = (modId: string) => {
+    if (modId === 'abjad') return false;
+    if (modId === 'syllable') return (progress['abjad']?.bestQuizScore || 0) < 100;
+    if (modId === 'sentence') return (progress['syllable']?.bestQuizScore || 0) < 100;
+    return false;
+  };
 
   const handleSeed = async () => {
     setSeeding(true);
@@ -41,6 +85,20 @@ export default function HomePage() {
     }
   };
 
+  const handleModuleClick = (mod: ModuleData) => {
+    if (getIsLocked(mod.id)) {
+      speak("Modul ini masih terkunci! Selesaikan modul sebelumnya ya!");
+      return;
+    }
+    setSelectedModule(mod);
+  };
+
+  const startModule = (mode: 'learn' | 'quiz') => {
+    if (!selectedModule) return;
+    router.push(`${selectedModule.path}?mode=${mode}`);
+    setSelectedModule(null);
+  };
+
   return (
     <main className="relative min-h-screen pt-24 sm:pt-32 pb-40 px-4 sm:px-6 max-w-lg mx-auto overflow-x-hidden bg-warm-cream">
       <TopBar />
@@ -51,14 +109,14 @@ export default function HomePage() {
             <motion.h1 
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="font-heading text-3xl sm:text-4xl font-black text-neoblack tracking-tight leading-none uppercase"
+              className="font-heading text-3xl sm:text-4xl font-black text-neoblack dark:text-foreground tracking-tight leading-none uppercase"
             >
               Halo, <br /> 
               <span className="text-yellow-500">
                 {activeProfile?.displayName || 'Pahlawan Kecil'}!
               </span>
             </motion.h1>
-            <p className="font-sans text-neoblack/70 font-bold text-xs sm:text-sm italic">
+            <p className="font-sans text-neoblack/70 dark:text-foreground/70 font-bold text-xs sm:text-sm italic">
               &quot;Siap bertualang hari ini?&quot;
             </p>
           </div>
@@ -74,36 +132,24 @@ export default function HomePage() {
         </header>
 
         <div className="grid grid-cols-1 gap-6">
-          <ModuleCard 
-            title="Mengenal Abjad" 
-            desc="Kenali huruf A sampai Z dengan suara!"
-            color="bg-pink-300"
-            progress={progress['abjad']?.mastery || 0}
-            onClick={() => router.push('/main/learn/abjad')}
-          />
-          <ModuleCard 
-            title="Huruf Vokal" 
-            desc="Belajar ba bi bu be bo yuk!"
-            color="bg-blue-300"
-            progress={progress['syllable']?.mastery || 0}
-            locked={isSyllableLocked}
-            onClick={() => router.push('/main/learn/suku-kata')}
-          />
-          <ModuleCard 
-            title="Merakit Kalimat" 
-            desc="Susun kata jadi kalimat seru."
-            color="bg-green-300"
-            progress={progress['sentence']?.mastery || 0}
-            locked={isSentenceLocked}
-            onClick={() => router.push('/main/learn/kalimat')}
-          />
+          {MODULES.map((mod) => (
+            <ModuleCard 
+              key={mod.id}
+              title={mod.title}
+              desc={mod.desc}
+              color={mod.color}
+              progress={progress[mod.id]?.bestQuizScore || 0}
+              locked={getIsLocked(mod.id)}
+              onClick={() => handleModuleClick(mod)}
+            />
+          ))}
         </div>
 
         {isAdmin && (
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="p-6 bg-yellow-50 neo-border border-dashed space-y-4 rounded-3xl"
+            className="p-6 bg-yellow-50 dark:bg-slate-900/50 neo-border border-dashed space-y-4 rounded-3xl"
           >
             <h2 className="font-heading font-black text-xl flex items-center gap-2">
               <Database size={20} /> ADMIN PANEL
@@ -120,6 +166,18 @@ export default function HomePage() {
           </motion.div>
         )}
       </section>
+
+      <ModuleOverviewPopup 
+        isOpen={!!selectedModule}
+        onClose={() => setSelectedModule(null)}
+        title={selectedModule?.title || ''}
+        description={selectedModule?.desc || ''}
+        icon={selectedModule?.icon}
+        isUnlocked={true}
+        learningFinished={progress[selectedModule?.id || '']?.learningFinished || false}
+        onStartLearning={() => startModule('learn')}
+        onStartQuiz={() => startModule('quiz')}
+      />
 
       <BottomNav />
     </main>

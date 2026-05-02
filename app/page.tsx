@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/atoms/button';
 import { useAuth } from '@/hooks/useAuth';
-import { ThemeToggle } from '@/components/organisms/ThemeToggle';
+import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 
 export default function LandingPage() {
   const router = useRouter();

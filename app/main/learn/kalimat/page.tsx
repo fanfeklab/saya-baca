@@ -11,48 +11,27 @@ import { useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 import { useProgress } from '@/hooks/useProgress';
 
-interface SentenceTrial {
-  id: string;
-  image: string;
-  template: string[]; // ['[ ]', 'sedang', '[ ]']
-  correctWords: string[]; // ['Kucing', 'Makan']
-  options: string[];
-}
+import { useSearchParams } from 'next/navigation';
+import { QuizResultView } from '@/components/organisms/QuizResultView';
+import { SENTENCE_TRIALS } from '@/lib/constants';
 
-const TRIALS: SentenceTrial[] = [
-  {
-    id: 's1',
-    image: '🐱',
-    template: ['[ ]', 'sedang', '[ ]'],
-    correctWords: ['KUCING', 'MAKAN'],
-    options: ['KUCING', 'MAKAN', 'TIDUR', 'ANJING']
-  },
-  {
-    id: 's2',
-    image: '⚽',
-    template: ['BIMA', 'main', '[ ]'],
-    correctWords: ['BOLA'],
-    options: ['BOLA', 'AIR', 'BUKU', 'PISANG']
-  },
-  {
-    id: 's3',
-    image: '🍎',
-    template: ['SAYA', 'makan', '[ ]'],
-    correctWords: ['APEL'],
-    options: ['APEL', 'JERUK', 'BOLEH', 'ADA']
-  }
-];
-
-export default function KalimatPage() {
+function KalimatPageContent() {
   const { speak } = useTTS();
   const router = useRouter();
-  const { completeWord } = useProgress();
+  const searchParams = useSearchParams();
+  const { markLearningFinished, saveQuizResult } = useProgress();
+  
+  const modeParam = searchParams.get('mode') as 'learn' | 'quiz' | null;
+  const initialMode = modeParam || 'learn';
+
+  const [view, setView] = React.useState<'learn' | 'quiz' | 'result'>(initialMode);
   const [currentIdx, setCurrentIdx] = React.useState(0);
   const [answers, setAnswers] = React.useState<string[]>([]);
-  const [isFinished, setIsFinished] = React.useState(false);
   const [showFeedback, setShowFeedback] = React.useState(false);
+  const [quizScore, setQuizScore] = React.useState(0);
+  const [xpGained, setXpGained] = React.useState(0);
 
-  const current = TRIALS[currentIdx];
+  const current = SENTENCE_TRIALS[currentIdx];
 
   const handleOptionClick = (word: string) => {
     if (answers.length < current.correctWords.length) {
@@ -72,14 +51,25 @@ export default function KalimatPage() {
     if (isCorrect) {
       speak("Pintar! Kalimatnya benar!");
       setShowFeedback(true);
-      setTimeout(() => {
-        if (currentIdx < TRIALS.length - 1) {
+      setTimeout(async () => {
+        if (currentIdx < SENTENCE_TRIALS.length - 1) {
           setCurrentIdx(c => c + 1);
           setAnswers([]);
           setShowFeedback(false);
         } else {
-          setIsFinished(true);
-          completeWord('sentence', 50);
+          // Learning finished
+          if (view === 'learn') {
+            await markLearningFinished('sentence');
+            speak("Luar biasa! Kamu sudah bisa menyusun kalimat. Sekarang coba kuisnya ya!");
+            router.push('/main/home');
+          } else {
+            // If it was a "Quiz" mode (maybe we use different trials for quiz later)
+            const score = 100; // Simplified for this interactive module
+            const { xpEarned } = await saveQuizResult('sentence', score);
+            setQuizScore(score);
+            setXpGained(xpEarned);
+            setView('result');
+          }
         }
       }, 2000);
     } else {
@@ -92,7 +82,7 @@ export default function KalimatPage() {
     let ansIdx = 0;
     const fullText = current.template.map(part => {
       if (part === '[ ]') {
-        const ans = answers[ansIdx] || 'kosong';
+        const ans = answers[ansIdx] || '...';
         ansIdx++;
         return ans;
       }
@@ -101,89 +91,102 @@ export default function KalimatPage() {
     speak(fullText);
   };
 
-  if (isFinished) {
+  if (view === 'result') {
     return (
-      <main className="min-h-screen bg-warm-cream flex items-center justify-center p-6">
-        <motion.div 
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white neo-border neo-shadow-lg rounded-[2.5rem] p-8 text-center space-y-6 w-full max-w-sm"
-        >
-          <div className="text-6xl">🏆</div>
-          <h2 className="font-heading text-3xl font-black uppercase">Hebat Banget!</h2>
-          <p className="font-sans font-bold text-neoblack/60 italic">Kamu sudah bisa menyusun kalimat!</p>
-          <Button variant="neo" className="w-full h-14" onClick={() => router.push('/main/home')}>
-            SELESAI
-          </Button>
-        </motion.div>
-      </main>
+      <QuizResultView 
+        score={quizScore}
+        xpGained={xpGained}
+        onRetry={() => {
+            setCurrentIdx(0);
+            setAnswers([]);
+            setView(initialMode);
+        }}
+        onFinish={() => router.push('/main/home')}
+      />
     );
   }
 
   return (
-    <main className="relative min-h-screen pt-24 pb-12 px-6 max-w-xl mx-auto bg-warm-cream">
+    <main className="fixed inset-0 bg-warm-cream dark:bg-background overflow-hidden flex flex-col pt-20 pb-8 px-6">
       <TopBar />
       
-      <div className="space-y-8">
-        <header className="flex items-center gap-4">
-          <Button variant="outline" size="icon" onClick={() => router.back()} className="rounded-full">
+      <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
+        <header className="flex items-center gap-4 shrink-0">
+          <Button variant="outline" size="icon" onClick={() => router.push('/main/home')} className="rounded-full neo-border shrink-0">
             <ArrowLeft />
           </Button>
-          <div>
-            <h1 className="font-heading text-3xl font-black text-neoblack uppercase">Merakit Kalimat</h1>
-            <p className="font-sans text-sm font-bold text-neoblack/60 italic">Lengkapi kalimat di bawah ini!</p>
+          <div className="min-w-0">
+            <h1 className="font-heading text-xl md:text-2xl font-black text-neoblack dark:text-foreground uppercase truncate">Merakit Kalimat</h1>
+            <p className="font-sans text-[10px] font-bold text-neoblack/60 dark:text-foreground/60 italic leading-none">Susun kata di bawah ini</p>
           </div>
         </header>
 
-        <Card className="p-8 neo-border neo-shadow bg-white rounded-[2.5rem] flex flex-col items-center gap-6">
-          <div className="text-8xl animate-pulse">{current.image}</div>
-          
-          <div className="flex flex-wrap justify-center gap-2 text-2xl font-black font-heading uppercase text-neoblack">
-            {current.template.map((part, idx) => {
-               if (part === '[ ]') {
-                 const slotIdx = current.template.slice(0, idx).filter(p => p === '[ ]').length;
-                 const answer = answers[slotIdx];
-                 return (
-                   <div key={idx} className={cn(
-                     "min-w-[100px] h-12 border-b-4 border-neoblack flex items-center justify-center transition-all",
-                     answer ? "text-yellow-500 scale-110" : "text-neoblack/20"
-                   )}>
-                     {answer || '...'}
-                   </div>
-                 );
-               }
-               return <span key={idx}>{part}</span>;
-            })}
-          </div>
+        <div className="flex-1 min-h-0 flex flex-col gap-6">
+            <Card className="p-8 neo-border neo-shadow bg-white dark:bg-slate-900 rounded-[2.5rem] flex flex-col items-center gap-6 shrink-0">
+                <div className="text-8xl animate-bounce">{current.image}</div>
+                
+                <div className="flex flex-wrap justify-center gap-2 text-xl md:text-2xl font-black font-heading uppercase text-neoblack dark:text-foreground">
+                    {current.template.map((part, idx) => {
+                    if (part === '[ ]') {
+                        const slotIdx = current.template.slice(0, idx).filter(p => p === '[ ]').length;
+                        const answer = answers[slotIdx];
+                        return (
+                        <div key={idx} className={cn(
+                            "min-w-[80px] md:min-w-[100px] h-10 md:h-12 border-b-4 border-neoblack dark:border-foreground flex items-center justify-center transition-all",
+                            answer ? "text-yellow-500 scale-110" : "text-neoblack/20 dark:text-foreground/20"
+                        )}>
+                            {answer || '...'}
+                        </div>
+                        );
+                    }
+                    return <span key={idx}>{part}</span>;
+                    })}
+                </div>
 
-          <Button variant="outline" size="icon" className="rounded-full" onClick={playSentence}>
-             <Play className="fill-current" />
-          </Button>
-        </Card>
+                <Button variant="outline" size="icon" className="rounded-full neo-border" onClick={playSentence}>
+                    <Play className="fill-current" />
+                </Button>
+            </Card>
 
-        <div className="grid grid-cols-2 gap-4">
-           {current.options.map((word) => (
-             <motion.button
-               key={word}
-               whileTap={{ scale: 0.9 }}
-               onClick={() => handleOptionClick(word)}
-               className="h-16 rounded-2xl bg-white neo-border neo-shadow font-heading font-black text-xl hover:bg-yellow-50 active:bg-yellow-400 transition-colors uppercase"
-             >
-               {word}
-             </motion.button>
-           ))}
+            <div className="flex-1 min-h-0 grid grid-cols-2 gap-4">
+                {current.options.map((word) => (
+                    <motion.button
+                        key={word}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleOptionClick(word)}
+                        className={cn(
+                            "rounded-[2rem] bg-white dark:bg-slate-900 neo-border neo-shadow font-heading font-black text-lg md:text-xl hover:bg-yellow-50 dark:hover:bg-slate-800 transition-colors uppercase flex items-center justify-center p-4",
+                            answers.includes(word) && "bg-yellow-100 dark:bg-yellow-900/20"
+                        )}
+                    >
+                        {word}
+                    </motion.button>
+                ))}
+            </div>
         </div>
 
-        {showFeedback && (
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="flex items-center justify-center gap-2 text-green-500 font-heading font-black text-2xl uppercase"
-          >
-            <CheckCircle2 size={32} /> LUAR BIASA!
-          </motion.div>
-        )}
+        <AnimatePresence>
+            {showFeedback && (
+                <motion.div 
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    className="shrink-0 flex items-center justify-center gap-2 text-green-500 font-heading font-black text-xl md:text-2xl uppercase py-2"
+                >
+                    <CheckCircle2 size={32} /> LUAR BIASA!
+                </motion.div>
+            )}
+        </AnimatePresence>
       </div>
     </main>
   );
 }
+
+export default function KalimatPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-warm-cream dark:bg-background flex items-center justify-center font-heading font-black">MEMUAT...</div>}>
+      <KalimatPageContent />
+    </React.Suspense>
+  );
+}
+
