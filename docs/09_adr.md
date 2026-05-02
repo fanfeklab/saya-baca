@@ -153,3 +153,15 @@ Mencatat seluruh keputusan arsitektur signifikan yang diambil untuk SAYA BACA. S
 | **Keputusan** | Menggunakan rilis **Stable 16.2.4**. Menjadikan versi ini sebagai referensi utama framework frontend SAYA BACA. |
 | **Alternatif** | Menggunakan Next.js Canary. Ditolak karena fitur terbaru tidak dibutuhkan segera dan risiko ketidakstabilan pada environment CI/CD. |
 | **Konsekuensi** | ✅ Perbaikan pada isu webpack bawaan Next 15.<br/>✅ Stabilitas framework jangka panjang di production. |
+
+---
+
+### 11. ADR-012: Arsitektur Gamified Navigation & Context-Aware Layout
+
+| Atribut | Detail |
+|---------|--------|
+| **Status** | Disetujui |
+| **Tanggal** | 2026-05-02 |
+| **Konteks** | Flow UI aplikasi perlu mencerminkan standar "*Gamified Ed-Tech*" terbaik. Saat ini logic profile terperangkap dalam Modal Dashboard, BottomNav mengganggu area layar saat belajar, format Quiz kurang *immersive*, dan tidak ada Avatar randomizer generator. |
+| **Keputusan** | Mengaplikasikan desain flow berdasarkan `UI_UX_FLOW.md`: <br/>1. **Isolated Profile Screen**: Mengubah popup profil menjadi Screen khusus `/profiles` sebelum masuk Main Dashboard.<br/>2. **Avatar DiceBear Integration**: Menerapkan 6 *randomized grid avatar* di layar Add Profile.<br/>3. **Context-Aware Navigation**: Merekayasa `BottomNav` untuk hilang (*hidden*) dan `TopBar` berubah menjadi **HUD Game** (Menyajikan sapaan, Badge Level, Pill Points, Pill EXP, Dropdown Options) saat berada di rute Learning/Quiz.<br/>4. **Auto-Next Engine**: Pagination dan pergerakan antar soal quiz berjalan automatis + instant feedback, tanpa scroll vertikal. Layar result quiz dipisah jadi Full Screen Score Page. |
+| **Konsekuensi** | ✅ Flow lebih profesional layaknya game betulan.<br/>✅ Area sentuh belajar menjadi 100% *no-scroll interference*.<br/>❌ Kompleksitas routing dan state management akan meningkat dan memaksa penggunakan *Zustand store global* untuk memanipulasi visibility layout. |

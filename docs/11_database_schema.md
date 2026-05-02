@@ -104,8 +104,11 @@ Dokumen ini mendefinisikan skema database untuk SAYA BACA. Skema dirancang per b
 | `total_xp` | INTEGER DEFAULT 0 | |
 | `current_level` | INTEGER DEFAULT 1 | |
 | `current_streak` | INTEGER DEFAULT 0 | Hari berturut-turut |
-| `last_activity_date` | DATE | Tanggal terakhir aktivitas |
 | `longest_streak` | INTEGER DEFAULT 0 | |
+| `coins` | INTEGER DEFAULT 0 | Mata uang in-game (🪙) |
+| `energy` | INTEGER DEFAULT 5 | Nyawa untuk main quiz/game (❤️) |
+| `last_energy_refill_at` | TIMESTAMPTZ | Waktu terakhir energy di-refill |
+| `last_activity_date` | DATE | Tanggal terakhir aktivitas (untuk validasi streak) |
 
 #### 5.2 Tabel: `xp_transactions`
 

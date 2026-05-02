@@ -31,13 +31,18 @@
 - [ ] Quiz Engine (Sequence unlocking logic: Modul 1 -> Modul 2) (AC-114)
 - [x] UI Grid Engine (Pagination dinamis, no-scroll UI) untuk Learn Pages
 - [x] TTS Override Logic (Logika baca `speechText` vs `displayText`)
+- [ ] Gamification Store (Zustand: Energy, Points, Streak, HUD Layout Visibility) (AC-208, AC-209, AC-210)
 
 ## 🎮 Phase 4: Modules & Gamification [ON HOLD]
+- [ ] UI/UX Restructure: Isolated Profile Screen & Randomizer Avatar DiceBear (US-003, ADR-012)
+- [ ] UI/UX Restructure: Immersive HUD TopBar & Context-Aware BottomNav (ADR-012)
 - [ ] Module: Mengenal Abjad (Visual + TTS + Quiz) (AC-102)
 - [ ] Module: Suku Kata (Masking Logic: ba-bi-bu) (AC-104)
 - [ ] Module: Merakit Kalimat (Tokenization logic) (AC-110)
 - [ ] Reward System (Star Animation 1-5, Stickers, Level Up) (AC-203, AC-206)
-- [ ] Mini Game: Tebak Gambar (Emoji masking) (AC-603)
+- [ ] Game Feature: Mascot Dinamis (Feedback Senyum/Semangat) (AC-211)
+- [ ] Game Feature: Boss Battle Engine (Monster di akhir topik) (AC-212)
+- [ ] Game Feature: Fun Games / Minigame Mode (Timer, Combo Multiplier) (AC-213)
 
 ## 🔒 Phase 5: Parent Portal & Admin
 - [ ] Parent Dashboard (Real-time charts: Progress, Time spent) (AC-405)

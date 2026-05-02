@@ -76,6 +76,12 @@ Dokumen ini mendaftarkan seluruh Acceptance Criteria (AC) untuk SAYA BACA. Setia
 | **AC-205** | US-203 | **Given** anak memiliki streak 3 hari, **when** mereka tidak membuka aplikasi sama sekali di hari ke-4, **then** streak reset ke 0. Tidak ada notifikasi negatif, cukup tidak muncul api. |
 | **AC-206** | US-204 | **Given** anak mencapai target "5 kuis selesai", **when** target tercapai, **then** stiker digital muncul di layar dengan animasi "Koleksi Baru!" dan masuk ke album stiker. |
 | **AC-207** | US-205 | **Given** anak menyelesaikan seluruh modul dalam kategori "Literasi Dasar" (3 modul), **when** modul terakhir selesai, **then** badge "Master Abjad" diberikan dengan animasi khusus dan muncul di profil anak. |
+| **AC-208** | US-023 | **Given** anak menjawab salah dalam Kuis atau Boss Battle, **when** jawaban diverifikasi, **then** energi (nyawa) berkurang 1. Jika energi habis (0), anak tidak bisa melanjutkan kuis/game dan diarahkan untuk istirahat. |
+| **AC-209** | US-023 | **Given** energi anak < 5, **when** waktu berlalu (e.g. 30 menit per nyawa), **then** energi akan terisi kembali secara otomatis, diverifikasi via backend. |
+| **AC-210** | US-024 | **Given** anak menyelesaikan modul atau mencapai skor tinggi, **when** kuis selesai, **then** anak mendapatkan sejumlah koin (🪙) dan ditambahkan ke dompet akunnya. |
+| **AC-211** | US-025 | **Given** anak menjawab soal di layar, **when** anak benar, **then** maskot merespons dengan animasi positif (tersenyum/melompat). **When** anak salah, **then** maskot berekspresi memberi semangat. |
+| **AC-212** | US-026 | **Given** anak mencapai akhir sebuah topik, **when** modul evaluasi (Boss) dimasuki, **then** UI berubah menjadi format serangan ke monster, setiap jawaban benar akan mengurangi health monster tersebut. |
+| **AC-213** | US-027 | **Given** modul Fun Game dibuka, **when** anak memainkannya, **then** terdapat sistem Timer hitung mundur, dan setiap jawaban cepat & benar berturut-turut memberikan extra Multiplier (Combo) untuk koin dan poin. |
 
 #### 3.4 Engine Konten & Soal
 

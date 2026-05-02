@@ -45,7 +45,11 @@ Dokumen ini menjabarkan seluruh kebutuhan fungsional dan non-fungsional dari **S
 | **US-020** | Must | Sebagai **anak**, saya ingin mendapatkan XP setiap kali saya menjawab benar atau menyelesaikan modul agar level saya naik. | AC-030, AC-031 |
 | **US-021** | Must | Sebagai **anak**, saya ingin melihat skor saya dalam bentuk bintang (1-5) setelah menyelesaikan kuis agar saya tahu seberapa baik hasil saya. | AC-032 |
 | **US-022** | Must | Sebagai **anak**, saya ingin mendapatkan "Streak" jika saya belajar setiap hari berturut-turut agar saya termotivasi untuk kembali. | AC-033, AC-034 |
-| **US-023** | Should | Sebagai **anak**, saya ingin mengoleksi stiker dan badge digital sebagai reward atas pencapaian tertentu. | AC-035, AC-036 |
+| **US-023** | Should | Sebagai **anak**, saya ingin memiliki "Nyawa" (Energy) maksimal 5 yang akan berkurang jika saya salah menjawab, dan akan terisi otomatis agar saya lebih berhati-hati dalam menjawab. | AC-035 (Baru) |
+| **US-024** | Should | Sebagai **anak**, saya ingin mengumpulkan Koin (🪙) setiap kali bermain dengan baik agar bisa saya belanjakan di Toko (Store) untuk aksesoris Avatar. | AC-036 (Baru) |
+| **US-025** | Must | Sebagai **anak**, saya ingin ditemani oleh Maskot interaktif di layar, yang berekspresi senang jika saya benar dan menyemangati jika saya salah. | AC-037 (Baru) |
+| **US-026** | Must | Sebagai **anak**, saya ingin menghadapi Boss (Monster) di akhir sebuah topik utama untuk mengalahkan mereka dengan jawaban yang tepat. | AC-038 (Baru) |
+| **US-027** | Should | Sebagai **anak**, saya ingin bermain Fun Games (Minigame) yang punya Timer dan Multiplier (combo) untuk melatih kecepatan saya, tetapi hanya jika saya sudah mencapai level tertentu. | AC-039 (Baru) |
 
 #### 2.4 Engine Penyedia Konten & Soal
 
