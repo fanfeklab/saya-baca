@@ -80,10 +80,25 @@
     overscroll-behavior-y: none;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
-  input, textarea, [contenteditable="true"] {
+  /* Enable selection for input and editable content */
+  input, textarea, [contenteditable="true"], .selectable {
     -webkit-user-select: auto;
     user-select: auto;
+  }
+
+  /* Sharp contrast variables for native-like surfaces */
+  :root {
+    --background: oklch(0.98 0.01 250);
+    --foreground: oklch(0.15 0.02 250);
+  }
+
+  .dark {
+    --background: oklch(0.1 0.02 250);
+    --foreground: oklch(0.95 0.01 250);
   }
 }

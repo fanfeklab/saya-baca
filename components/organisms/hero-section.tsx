@@ -10,19 +10,9 @@ import Link from "next/link"
 export function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden">
-      {/* Background Ornaments */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-tr from-indigo-500/20 to-fuchsia-500/20 blur-[100px] rounded-full" />
-        <motion.div 
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-32 h-32 bg-amber-400/20 rounded-full blur-[40px]" 
-        />
-        <motion.div 
-          animate={{ y: [0, 30, 0], rotate: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-          className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-emerald-400/20 rounded-full blur-[50px]" 
-        />
+      {/* Background Ornaments - Simplified for performance */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/10 blur-[100px] rounded-full" />
       </div>
 
       <div className="max-w-4xl mx-auto px-6 text-center z-10 flex flex-col items-center">

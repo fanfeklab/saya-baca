@@ -19,27 +19,21 @@ export const GlassPanel = React.forwardRef<HTMLDivElement, GlassPanelProps>(
 
     const blurStyles = {
       low: 'backdrop-blur-sm',
-      medium: 'backdrop-blur-md',
-      high: 'backdrop-blur-xl',
+      medium: 'backdrop-blur-[10px]',
+      high: 'backdrop-blur-[20px]',
     };
 
     return (
       <div
         ref={ref}
         className={cn(
-          'relative rounded-3xl border overflow-hidden',
+          'relative rounded-3xl border overflow-hidden transition-all duration-300',
           variantStyles[variant],
           blurStyles[intensity],
           className
         )}
         {...props}
       >
-        {/* Optional gloss reflection for certain variants */}
-        {(variant === 'standard' || variant === 'heavy') && (
-          <div className="absolute inset-0 z-0 pointer-events-none rounded-3xl overflow-hidden">
-            <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-gradient-to-b from-white/20 to-transparent dark:from-white/5 dark:to-transparent rotate-12 transform translate-y-[-50%]"></div>
-          </div>
-        )}
         <div className="relative z-10 w-full h-full">
           {children}
         </div>
