@@ -55,7 +55,7 @@ export default function ParentDashboard() {
 
   if (!isParentAuthenticated) {
     return (
-      <main className="min-h-screen bg-warm-cream flex items-center justify-center p-4">
+      <main className="min-h-screen relative z-10 flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           <PinPad 
             onComplete={handleVerify} 
@@ -88,14 +88,14 @@ export default function ParentDashboard() {
   ];
 
   return (
-    <main className="min-h-screen bg-slate-50 pt-24 sm:pt-32 pb-12 px-4 sm:px-6 max-w-4xl mx-auto">
+    <main className="min-h-screen bg-muted pt-24 sm:pt-32 pb-12 px-4 sm:px-6 max-w-4xl mx-auto">
       <TopBar />
       
       <div className="space-y-8">
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="font-heading text-4xl font-black text-neoblack uppercase tracking-tight">Parent Dashboard</h1>
-            <p className="font-sans font-bold text-neoblack/60 italic">Pantau perkembangan si kecil di sini.</p>
+            <h1 className="font-heading text-4xl font-black text-foreground uppercase tracking-tight">Parent Dashboard</h1>
+            <p className="font-sans font-bold text-foreground/60 italic">Pantau perkembangan si kecil di sini.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => router.push('/main/home')} className="rounded-xl flex gap-2">
@@ -109,7 +109,7 @@ export default function ParentDashboard() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-white neo-border neo-shadow">
+          <Card className="bg-card neo-border neo-shadow">
             <CardHeader className="pb-2">
                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
                  <Users size={16} /> Total Profil
@@ -200,7 +200,7 @@ export default function ParentDashboard() {
                       </Avatar>
                       <div>
                         <div className="font-black font-heading uppercase">{p.displayName}</div>
-                        <div className="text-xs font-bold text-neoblack/60 uppercase">LEVEL {p.currentLevel} • {p.totalXp} XP</div>
+                        <div className="text-xs font-bold text-foreground/60 uppercase">LEVEL {p.currentLevel} • {p.totalXp} XP</div>
                       </div>
                     </div>
                     <Button variant="outline" size="sm" className="rounded-xl font-bold">EDIT</Button>

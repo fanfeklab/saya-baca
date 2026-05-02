@@ -100,7 +100,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen pt-24 sm:pt-32 pb-40 px-4 sm:px-6 max-w-lg mx-auto overflow-x-hidden bg-warm-cream">
+    <main className="relative min-h-screen pt-24 sm:pt-32 pb-40 px-4 sm:px-6 max-w-lg mx-auto overflow-x-hidden bg-background">
       <TopBar />
       
       <section className="space-y-6 sm:space-y-8">
@@ -109,14 +109,14 @@ export default function HomePage() {
             <motion.h1 
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              className="font-heading text-3xl sm:text-4xl font-black text-neoblack dark:text-foreground tracking-tight leading-none uppercase"
+              className="font-heading text-3xl sm:text-4xl font-black text-foreground tracking-tight leading-none uppercase"
             >
               Halo, <br /> 
               <span className="text-yellow-500">
                 {activeProfile?.displayName || 'Pahlawan Kecil'}!
               </span>
             </motion.h1>
-            <p className="font-sans text-neoblack/70 dark:text-foreground/70 font-bold text-xs sm:text-sm italic">
+            <p className="font-sans text-foreground/70  font-bold text-xs sm:text-sm italic">
               &quot;Siap bertualang hari ini?&quot;
             </p>
           </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="p-6 bg-yellow-50 dark:bg-slate-900/50 neo-border border-dashed space-y-4 rounded-3xl"
+            className="p-6 bg-yellow-50 neo-border border-dashed space-y-4 rounded-3xl"
           >
             <h2 className="font-heading font-black text-xl flex items-center gap-2">
               <Database size={20} /> ADMIN PANEL

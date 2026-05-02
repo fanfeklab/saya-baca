@@ -34,14 +34,14 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-warm-cream flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-white p-10 rounded-[2.5rem] neo-border neo-shadow-lg space-y-8">
+    <div className="min-h-screen relative z-10 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm bg-card p-10 rounded-[2.5rem] neo-border neo-shadow-lg space-y-8">
         <div className="text-center space-y-4">
           <div className="w-20 h-20 bg-yellow-100 border-4 border-yellow-500 rounded-full flex items-center justify-center mx-auto">
             <Database size={40} className="text-yellow-600" />
           </div>
-          <h1 className="font-heading text-3xl font-black text-neoblack uppercase">Sistem Admin</h1>
-          <p className="font-sans text-neoblack/60 font-bold italic">
+          <h1 className="font-heading text-3xl font-black text-foreground uppercase">Sistem Admin</h1>
+          <p className="font-sans text-foreground/60 font-bold italic">
             Hanya untuk personel terdaftar.
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
           <Button 
             variant="ghost"
             onClick={() => router.push('/')}
-            className="w-full font-bold text-neoblack/40 hover:text-neoblack"
+            className="w-full font-bold text-foreground/40 hover:text-foreground"
           >
             KEMBALI KE BERANDA
           </Button>

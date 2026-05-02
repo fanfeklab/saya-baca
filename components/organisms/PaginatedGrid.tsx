@@ -73,7 +73,7 @@ export function PaginatedGrid<T extends GridItem>({
               onClick={() => handleItemClick(item, i)}
               className={cn(
                 "aspect-square rounded-[2rem] neo-border flex items-center justify-center font-heading transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_rgba(0,0,0,1)]",
-                selectedId === item.id ? "bg-yellow-400" : "bg-white hover:bg-yellow-50"
+                selectedId === item.id ? "bg-yellow-400" : "bg-card hover:bg-yellow-50"
               )}
             >
               {renderItem ? renderItem(item, selectedId === item.id) : (
@@ -101,8 +101,8 @@ export function PaginatedGrid<T extends GridItem>({
               <div 
                 key={i} 
                 className={cn(
-                  "w-3 h-3 rounded-full border-2 border-neoblack transition-colors",
-                  currentPage === i ? "bg-neoblack" : "bg-transparent"
+                  "w-3 h-3 rounded-full border-2 border-foreground transition-colors",
+                  currentPage === i ? "bg-foreground" : "bg-transparent"
                 )} 
               />
             ))}

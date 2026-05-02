@@ -100,7 +100,7 @@ function AbjadPageContent() {
   }
 
   return (
-    <main className="fixed inset-0 bg-warm-cream dark:bg-background overflow-hidden flex flex-col pt-20 pb-8 px-6">
+    <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
       <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
@@ -109,8 +109,8 @@ function AbjadPageContent() {
             <ArrowLeft />
           </Button>
           <div className="min-w-0">
-            <h1 className="font-heading text-xl md:text-2xl font-black text-neoblack dark:text-foreground uppercase truncate">Belajar Abjad</h1>
-            <p className="font-sans text-[10px] font-bold text-neoblack/60 dark:text-foreground/60 italic leading-none">Klik kotak untuk mendengar</p>
+            <h1 className="font-heading text-xl md:text-2xl font-black text-foreground uppercase truncate">Belajar Abjad</h1>
+            <p className="font-sans text-[10px] font-bold text-foreground/60  italic leading-none">Klik kotak untuk mendengar</p>
           </div>
         </header>
 
@@ -122,24 +122,24 @@ function AbjadPageContent() {
                 initial={{ y: 20, opacity: 0, scale: 0.9 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}
                 exit={{ y: -20, opacity: 0, scale: 0.9 }}
-                className="w-full h-40 md:h-44 bg-white dark:bg-slate-900 neo-border neo-shadow-lg rounded-[2.5rem] flex items-center justify-center relative shrink-0"
+                className="w-full h-40 md:h-44 bg-card neo-border neo-shadow-lg rounded-[2.5rem] flex items-center justify-center relative shrink-0"
               >
                 <div className="absolute top-4 right-6 animate-pulse">
                   <Volume2 size={24} className="text-yellow-500" />
                 </div>
                 <div className="text-center">
-                  <span className="text-7xl md:text-8xl font-black text-neoblack dark:text-foreground font-heading leading-none block">{selected}</span>
+                  <span className="text-7xl md:text-8xl font-black text-foreground  font-heading leading-none block">{selected}</span>
                   <div className="mt-1 flex items-center justify-center gap-2">
                     <span className="text-2xl">{ALPHABET_EXAMPLES[selected]?.icon}</span>
-                    <span className="text-base md:text-lg font-heading font-black text-neoblack/40 dark:text-foreground/40 uppercase tracking-widest leading-none">
+                    <span className="text-base md:text-lg font-heading font-black text-foreground/40  uppercase tracking-widest leading-none">
                       {ALPHABET_EXAMPLES[selected]?.word}
                     </span>
                   </div>
                 </div>
               </motion.div>
             ) : (
-                <div className="w-full h-40 md:h-44 bg-slate-100 dark:bg-slate-800/20 neo-border border-dashed rounded-[2.5rem] flex items-center justify-center text-center p-6 shrink-0">
-                  <p className="font-heading font-black text-neoblack/30 dark:text-foreground/20 text-xl md:text-2xl leading-tight">
+                <div className="w-full h-40 md:h-44 bg-muted neo-border border-dashed rounded-[2.5rem] flex items-center justify-center text-center p-6 shrink-0">
+                  <p className="font-heading font-black text-foreground/30  text-xl md:text-2xl leading-tight">
                     PILIH HURUF <br />DI BAWAH INI!
                   </p>
                 </div>
@@ -167,7 +167,7 @@ function AbjadPageContent() {
              <Button 
                 variant="neo" 
                 onClick={handleFinishLearning}
-                className="w-full py-6 bg-green-400 dark:text-neoblack group"
+                className="w-full py-6 bg-green-400  group"
              >
                 <span className="text-lg">SELESAI BELAJAR!</span>
                 <ArrowLeft size={20} className="ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
@@ -181,7 +181,7 @@ function AbjadPageContent() {
 
 export default function AbjadPage() {
   return (
-    <React.Suspense fallback={<div className="min-h-screen bg-warm-cream dark:bg-background flex items-center justify-center font-heading font-black">MEMUAT...</div>}>
+    <React.Suspense fallback={<div className="min-h-screen relative z-10  items-center justify-center font-heading font-black">MEMUAT...</div>}>
       <AbjadPageContent />
     </React.Suspense>
   );

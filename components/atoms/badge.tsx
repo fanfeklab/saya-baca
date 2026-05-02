@@ -12,8 +12,8 @@ const badgeVariants = cva(
         default: "bg-primary text-primary-foreground neo-border",
         secondary: "bg-secondary text-secondary-foreground neo-border",
         destructive: "bg-destructive text-destructive-foreground neo-border",
-        outline: "text-foreground neo-border bg-white",
-        neo: "bg-neoblack text-white font-black px-3 py-1 text-[10px]",
+        outline: "text-foreground neo-border bg-card",
+        neo: "bg-foreground text-background font-black px-3 py-1 text-[10px]",
       },
     },
     defaultVariants: {

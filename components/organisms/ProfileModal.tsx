@@ -53,12 +53,12 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md neo-border rounded-[2.5rem] bg-warm-cream p-8">
+      <DialogContent className="sm:max-w-md neo-border rounded-[2.5rem] p-8">
         <DialogHeader>
           <DialogTitle className="font-heading text-3xl font-black uppercase text-center">
             {view === 'select' ? 'SIAPA YANG BELAJAR?' : 'TAMBAH PROFIL BARU'}
           </DialogTitle>
-          <DialogDescription className="text-center font-bold italic text-neoblack/60">
+          <DialogDescription className="text-center font-bold italic text-foreground/60">
             {view === 'select' ? 'Pilih profilmu untuk lanjut bertualang!' : 'Buat profil untuk si kecil.'}
           </DialogDescription>
         </DialogHeader>
@@ -81,7 +81,7 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
                   }}
                   className={cn(
                     "flex flex-col items-center gap-3 p-4 rounded-3xl neo-border transition-all group",
-                    activeProfile?.id === p.id ? "bg-yellow-400 neo-shadow" : "bg-white hover:bg-yellow-50"
+                    activeProfile?.id === p.id ? "bg-yellow-400 neo-shadow" : "bg-card hover:bg-yellow-50"
                   )}
                 >
                   <Avatar className="h-16 w-16 neo-border group-hover:scale-110 transition-transform">
@@ -94,9 +94,9 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
               ))}
               <button
                 onClick={() => setView('create')}
-                className="flex flex-col items-center justify-center gap-3 p-4 rounded-3xl neo-border border-dashed bg-white hover:bg-slate-50 transition-all font-heading font-black text-xs uppercase"
+                className="flex flex-col items-center justify-center gap-3 p-4 rounded-3xl neo-border border-dashed bg-white hover:bg-muted transition-all font-heading font-black text-xs uppercase"
               >
-                <div className="h-16 w-16 rounded-full border-2 border-dashed border-neoblack flex items-center justify-center">
+                <div className="h-16 w-16 rounded-full border-2 border-dashed border-foreground flex items-center justify-center">
                   <Plus />
                 </div>
                 TAMBAH PROFIL
@@ -126,7 +126,7 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
                         <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${av}`} />
                       </Avatar>
                       {selectedAvatar === av && (
-                        <div className="absolute -top-2 -right-2 bg-neoblack text-white rounded-full p-1">
+                        <div className="absolute -top-2 -right-2 bg-foreground text-background rounded-full p-1">
                           <Check size={12} />
                         </div>
                       )}
@@ -153,7 +153,7 @@ export function ProfileModal({ open, onOpenChange }: ProfileModalProps) {
                   </Button>
                 )}
                 <Button 
-                  className="flex-1 h-12 rounded-xl bg-neoblack text-white font-black"
+                  className="flex-1 h-12 rounded-xl bg-foreground text-white font-black"
                   onClick={handleCreate}
                   disabled={!name.trim() || isSubmitting}
                 >

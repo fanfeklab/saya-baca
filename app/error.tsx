@@ -21,19 +21,19 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-warm-cream p-6">
+    <div className="min-h-screen relative z-10 flex items-center justify-center p-6">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full bg-white neo-border neo-shadow-lg rounded-[2.5rem] p-10 text-center space-y-6"
+        className="max-w-md w-full bg-card neo-border neo-shadow-lg rounded-[2.5rem] p-10 text-center space-y-6"
       >
         <div className="w-20 h-20 bg-red-100 border-4 border-red-500 rounded-full flex items-center justify-center mx-auto">
           <AlertTriangle size={40} className="text-red-500" />
         </div>
         
         <div className="space-y-2">
-          <h1 className="font-heading text-3xl font-black text-neoblack uppercase">Aduh, Ada Masalah!</h1>
-          <p className="font-sans text-neoblack/60 font-bold">
+          <h1 className="font-heading text-3xl font-black text-foreground uppercase">Aduh, Ada Masalah!</h1>
+          <p className="font-sans text-foreground/60 font-bold">
             Sepertinya aplikasi mengalami kendala teknis. Jangan khawatir, kita bisa coba lagi.
           </p>
         </div>

@@ -107,7 +107,7 @@ function KalimatPageContent() {
   }
 
   return (
-    <main className="fixed inset-0 bg-warm-cream dark:bg-background overflow-hidden flex flex-col pt-20 pb-8 px-6">
+    <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
       <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
@@ -116,24 +116,24 @@ function KalimatPageContent() {
             <ArrowLeft />
           </Button>
           <div className="min-w-0">
-            <h1 className="font-heading text-xl md:text-2xl font-black text-neoblack dark:text-foreground uppercase truncate">Merakit Kalimat</h1>
-            <p className="font-sans text-[10px] font-bold text-neoblack/60 dark:text-foreground/60 italic leading-none">Susun kata di bawah ini</p>
+            <h1 className="font-heading text-xl md:text-2xl font-black text-foreground uppercase truncate">Merakit Kalimat</h1>
+            <p className="font-sans text-[10px] font-bold text-foreground/60  italic leading-none">Susun kata di bawah ini</p>
           </div>
         </header>
 
         <div className="flex-1 min-h-0 flex flex-col gap-6">
-            <Card className="p-8 neo-border neo-shadow bg-white dark:bg-slate-900 rounded-[2.5rem] flex flex-col items-center gap-6 shrink-0">
+            <Card className="p-8 neo-border neo-shadow bg-card rounded-[2.5rem] flex flex-col items-center gap-6 shrink-0">
                 <div className="text-8xl animate-bounce">{current.image}</div>
                 
-                <div className="flex flex-wrap justify-center gap-2 text-xl md:text-2xl font-black font-heading uppercase text-neoblack dark:text-foreground">
+                <div className="flex flex-wrap justify-center gap-2 text-xl md:text-2xl font-black font-heading uppercase text-foreground ">
                     {current.template.map((part, idx) => {
                     if (part === '[ ]') {
                         const slotIdx = current.template.slice(0, idx).filter(p => p === '[ ]').length;
                         const answer = answers[slotIdx];
                         return (
                         <div key={idx} className={cn(
-                            "min-w-[80px] md:min-w-[100px] h-10 md:h-12 border-b-4 border-neoblack dark:border-foreground flex items-center justify-center transition-all",
-                            answer ? "text-yellow-500 scale-110" : "text-neoblack/20 dark:text-foreground/20"
+                            "min-w-[80px] md:min-w-[100px] h-10 md:h-12 border-b-4 border-foreground  flex items-center justify-center transition-all",
+                            answer ? "text-yellow-500 scale-110" : "text-foreground/20 "
                         )}>
                             {answer || '...'}
                         </div>
@@ -155,8 +155,8 @@ function KalimatPageContent() {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleOptionClick(word)}
                         className={cn(
-                            "rounded-[2rem] bg-white dark:bg-slate-900 neo-border neo-shadow font-heading font-black text-lg md:text-xl hover:bg-yellow-50 dark:hover:bg-slate-800 transition-colors uppercase flex items-center justify-center p-4",
-                            answers.includes(word) && "bg-yellow-100 dark:bg-yellow-900/20"
+                            "rounded-[2rem] bg-card neo-border neo-shadow font-heading font-black text-lg md:text-xl hover:bg-yellow-50  transition-colors uppercase flex items-center justify-center p-4",
+                            answers.includes(word) && "bg-yellow-100 "
                         )}
                     >
                         {word}
@@ -184,7 +184,7 @@ function KalimatPageContent() {
 
 export default function KalimatPage() {
   return (
-    <React.Suspense fallback={<div className="min-h-screen bg-warm-cream dark:bg-background flex items-center justify-center font-heading font-black">MEMUAT...</div>}>
+    <React.Suspense fallback={<div className="min-h-screen relative z-10  items-center justify-center font-heading font-black">MEMUAT...</div>}>
       <KalimatPageContent />
     </React.Suspense>
   );

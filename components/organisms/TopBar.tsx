@@ -46,7 +46,7 @@ export function TopBar() {
       {/* Left Profile Pill */}
       <div 
         onClick={() => setProfileModalOpen(true)}
-        className="flex items-center gap-1 sm:gap-2 pointer-events-auto bg-card dark:bg-slate-800 p-1 sm:p-1.5 rounded-full neo-border neo-shadow max-w-[200px] sm:max-w-none min-w-0 cursor-pointer hover:bg-muted transition-colors"
+        className="flex items-center gap-1 sm:gap-2 pointer-events-auto bg-card p-1 sm:p-1.5 rounded-full neo-border neo-shadow max-w-[200px] sm:max-w-none min-w-0 cursor-pointer hover:bg-muted transition-colors"
       >
         <Button 
           variant="ghost" 
@@ -57,7 +57,7 @@ export function TopBar() {
           }} 
           className="rounded-full h-8 w-8 sm:h-10 sm:w-10 active:translate-x-0 active:translate-y-0 active:shadow-none shrink-0"
         >
-          <ArrowLeft className="size-4 sm:size-6 text-neoblack" />
+          <ArrowLeft className="size-4 sm:size-6 text-foreground" />
         </Button>
         
         <div className="flex items-center gap-2 sm:gap-3 px-1 sm:px-2 min-w-0 overflow-hidden">
@@ -75,12 +75,12 @@ export function TopBar() {
                 {activeProfile?.displayName || 'Pilih Profil'}
               </span>
               {activeProfile && (
-                <span className="bg-neoblack text-white text-[7px] sm:text-[9px] px-1.5 py-0.5 rounded-full font-black shrink-0">
+                <span className="bg-foreground text-background text-[7px] sm:text-[9px] px-1.5 py-0.5 rounded-full font-black shrink-0">
                   LVL {activeProfile.currentLevel}
                 </span>
               )}
             </div>
-            <span className="font-sans text-[8px] sm:text-[10px] font-bold text-neoblack/60 uppercase truncate">
+            <span className="font-sans text-[8px] sm:text-[10px] font-bold text-foreground/60 uppercase truncate">
               {activeProfile ? `${activeProfile.totalXp} XP • ${activeProfile.currentStreak} HARI` : 'Klik untuk masuk'}
             </span>
           </div>

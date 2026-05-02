@@ -40,7 +40,7 @@ export default function RootLayout({
         className={`${geist.variable} ${spaceGrotesk.variable} ${comicNeue.variable} antialiased min-h-screen relative`}
         suppressHydrationWarning
       >
-        <div className="fixed inset-0 grid-background pointer-events-none -z-10" />
+        <div className="fixed inset-0 pointer-events-none z-0 grid-bg opacity-100" />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

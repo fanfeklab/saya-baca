@@ -113,7 +113,7 @@ function SukuKataPageContent() {
   }
 
   return (
-    <main className="fixed inset-0 bg-warm-cream dark:bg-background overflow-hidden flex flex-col pt-20 pb-8 px-6">
+    <main className="fixed inset-0 overflow-hidden flex flex-col pt-20 pb-8 px-6">
       <TopBar />
       
       <div className="flex-1 flex flex-col max-w-xl mx-auto w-full gap-6">
@@ -122,12 +122,12 @@ function SukuKataPageContent() {
             <ArrowLeft />
           </Button>
           <div className="min-w-0">
-            <h1 className="font-heading text-xl md:text-2xl font-black text-neoblack dark:text-foreground uppercase truncate">Mengenal Vokal</h1>
-            <p className="font-sans text-[10px] font-bold text-neoblack/60 dark:text-foreground/60 italic leading-none">Ketuk tulisan untuk mendengar</p>
+            <h1 className="font-heading text-xl md:text-2xl font-black text-foreground uppercase truncate">Mengenal Vokal</h1>
+            <p className="font-sans text-[10px] font-bold text-foreground/60  italic leading-none">Ketuk tulisan untuk mendengar</p>
           </div>
         </header>
 
-        <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 rounded-[2.5rem] neo-border neo-shadow p-4 md:p-8 flex flex-col items-center justify-center overflow-hidden">
+        <div className="flex-1 min-h-0 bg-card rounded-[2.5rem] neo-border neo-shadow p-4 md:p-8 flex flex-col items-center justify-center overflow-hidden">
            <ReadingBoard 
               pages={PAGES_DATA} 
               onFinish={handleFinishLearning}
@@ -141,7 +141,7 @@ function SukuKataPageContent() {
 
 export default function SukuKataPage() {
   return (
-    <React.Suspense fallback={<div className="min-h-screen bg-warm-cream dark:bg-background flex items-center justify-center font-heading font-black">MEMUAT...</div>}>
+    <React.Suspense fallback={<div className="min-h-screen relative z-10  items-center justify-center font-heading font-black">MEMUAT...</div>}>
       <SukuKataPageContent />
     </React.Suspense>
   );

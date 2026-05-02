@@ -22,13 +22,13 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-neoblack text-white p-4 flex items-center justify-between">
+    <div className="min-h-screen relative z-10 bg-muted">
+      <header className="bg-foreground text-background p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Database size={24} className="text-yellow-400" />
           <h1 className="font-heading font-black text-xl uppercase tracking-widest">SAYA BACA ADMIN</h1>
         </div>
-        <Button variant="ghost" size="icon" onClick={() => signOut()} className="hover:bg-white/20 text-white rounded-xl">
+        <Button variant="ghost" size="icon" onClick={() => signOut()} className="hover:bg-card/20 text-white rounded-xl">
           <LogOut size={20} />
         </Button>
       </header>
@@ -39,7 +39,7 @@ export default function AdminDashboardPage() {
             <h2 className="font-heading font-black text-lg mb-2 flex items-center gap-2">
               <FileText size={18}/> Bank Data
             </h2>
-            <p className="font-sans text-sm text-neoblack/60 font-bold mb-4">Kelola Abjad, Vokal, Kata, dan Kalimat di sini.</p>
+            <p className="font-sans text-sm text-foreground/60 font-bold mb-4">Kelola Abjad, Vokal, Kata, dan Kalimat di sini.</p>
             <Button className="w-full">KELOLA KONTEN</Button>
           </div>
           {/* Tambah card lain sesuai kebutuhan admin */}

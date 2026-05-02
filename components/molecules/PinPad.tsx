@@ -31,9 +31,9 @@ export function PinPad({ onComplete, title = "MASUKKAN PIN", error }: PinPadProp
   };
 
   return (
-    <div className="w-full max-w-sm space-y-8 p-4 bg-white rounded-3xl neo-border neo-shadow-lg mx-auto">
+    <div className="w-full max-w-sm space-y-8 p-4 bg-card rounded-3xl neo-border neo-shadow-lg mx-auto">
       <div className="text-center space-y-2">
-        <h2 className="font-heading text-2xl font-black text-neoblack">{title}</h2>
+        <h2 className="font-heading text-2xl font-black text-foreground">{title}</h2>
         <div className="flex justify-center gap-4 py-4">
           {[0, 1, 2, 3].map((i) => (
             <motion.div
@@ -79,7 +79,7 @@ export function PinPad({ onComplete, title = "MASUKKAN PIN", error }: PinPadProp
       <div className="text-center">
         <button 
           onClick={() => alert("Silahkan cek email Anda untuk instruksi reset PIN (Simulasi)")}
-          className="text-xs font-black text-neoblack/40 uppercase hover:text-neoblack transition-colors underline underline-offset-4"
+          className="text-xs font-black text-foreground/40 uppercase hover:text-foreground transition-colors underline underline-offset-4"
         >
           Lupa PIN?
         </button>

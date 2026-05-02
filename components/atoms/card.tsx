@@ -7,10 +7,10 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white text-neoblack neo-border neo-shadow rounded-3xl",
-        flat: "bg-white text-neoblack border-2 border-black rounded-3xl",
-        neo: "bg-white text-neoblack neo-border neo-shadow-lg rounded-[2rem]",
-        ghost: "bg-transparent text-neoblack",
+        default: "bg-card text-foreground neo-border neo-shadow rounded-3xl",
+        flat: "bg-card text-card-foreground border-2 border-border rounded-3xl",
+        neo: "bg-card text-card-foreground neo-border neo-shadow-lg rounded-[2rem]",
+        ghost: "bg-transparent text-foreground",
       },
       padding: {
         none: "p-0",
@@ -64,7 +64,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
       data-slot="card-description"
-      className={cn("font-sans text-sm sm:text-base font-bold text-neoblack/70 leading-snug", className)}
+      className={cn("font-sans text-sm sm:text-base font-bold text-foreground/70 leading-snug", className)}
       {...props}
     />
   )

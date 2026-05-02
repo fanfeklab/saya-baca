@@ -6,8 +6,8 @@
   --font-heading: "Space Grotesk", sans-serif;
   --font-comic: "Comic Neue", cursive;
 
-  --color-background: #FFFDF5;
-  --color-foreground: #000000;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
   --color-warm-cream: var(--background);
   --color-neoblack: var(--foreground);
   --color-card: var(--card);
@@ -15,12 +15,12 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   
-  --color-primary: #FDE047;
-  --color-primary-foreground: #000000;
-  --color-secondary: #000000;
-  --color-secondary-foreground: #FFFFFF;
-  --color-accent: #FDE047;
-  --color-accent-foreground: #000000;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--primary);
+  --color-accent-foreground: var(--primary-foreground);
   
   --color-border: var(--border);
   --color-input: var(--border);
@@ -89,11 +89,11 @@
   .neo-button {
     border: 2px solid var(--color-border, #000000);
     box-shadow: 4px 4px 0px 0px var(--color-ring, #000000);
-    @apply px-4 py-2 bg-white dark:bg-slate-800 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold uppercase;
+    @apply px-4 py-2 bg-card text-card-foreground transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold uppercase;
   }
 }
 
-.grid-background {
+.grid-bg {
   background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
@@ -101,7 +101,7 @@
   animation: move-grid 15s linear infinite;
 }
 
-.dark .grid-background {
+.dark .grid-bg {
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);

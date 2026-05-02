@@ -56,9 +56,9 @@ export function ReadingBoard({ pages, onFinish, className }: ReadingBoardProps) 
 
   return (
     <div className={cn("w-full flex flex-col", className)}>
-      <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-2xl neo-border shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+      <div className="flex items-center justify-between mb-6 bg-card p-4 rounded-2xl neo-border shadow-[4px_4px_0px_rgba(0,0,0,1)]">
         <h2 className="font-heading font-black text-xl uppercase">{currentData.title}</h2>
-        <Volume2 className="text-neoblack/40" />
+        <Volume2 className="text-foreground/40" />
       </div>
 
       <div className="space-y-4 mb-8 min-h-[40vh] flex flex-col justify-center">
@@ -79,7 +79,7 @@ export function ReadingBoard({ pages, onFinish, className }: ReadingBoardProps) 
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleItemClick(item)}
                     className={cn(
-                      "px-4 py-2 rounded-xl border-2 border-neoblack font-heading text-3xl font-black transition-colors shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none hover:bg-yellow-100",
+                      "px-4 py-2 rounded-xl border-2 border-foreground font-heading text-3xl font-black transition-colors shadow-[2px_2px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none hover:bg-yellow-100",
                       selectedId === item.id ? "bg-yellow-400" : "bg-white"
                     )}
                   >
@@ -108,8 +108,8 @@ export function ReadingBoard({ pages, onFinish, className }: ReadingBoardProps) 
             <div 
               key={i} 
               className={cn(
-                "w-2.5 h-2.5 rounded-full border-2 border-neoblack transition-colors",
-                currentPage === i ? "bg-neoblack" : "bg-transparent"
+                "w-2.5 h-2.5 rounded-full border-2 border-foreground transition-colors",
+                currentPage === i ? "bg-foreground" : "bg-transparent"
               )} 
             />
           ))}
