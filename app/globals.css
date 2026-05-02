@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-comic: "Comic Neue", cursive;
+
+  --color-background: #FFFDF5;
+  --color-foreground: #000000;
+  --color-warm-cream: #FFFDF5;
+  --color-neoblack: #000000;
+  
+  --color-primary: #FDE047;
+  --color-primary-foreground: #000000;
+  --color-secondary: #000000;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #FDE047;
+  --color-accent-foreground: #000000;
+  
+  --color-border: #000000;
+  --color-input: #000000;
+  --color-ring: #000000;
+
+  --radius-xl: 0px;
+  --radius-lg: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+
+  --shadow-neo: 4px 4px 0px 0px #000000;
+  --shadow-neo-lg: 8px 8px 0px 0px #000000;
+}
+
+@layer base {
+  :root {
+    --background: #FFFDF5;
+    --foreground: #000000;
+    --primary: #FDE047;
+    --primary-foreground: #000000;
+    --secondary: #000000;
+    --secondary-foreground: #FFFFFF;
+  }
+
+  .dark {
+    --background: #0A1128;
+    --foreground: #F8FAFC;
+    --primary: #FDE047;
+    --primary-foreground: #000000;
+    --secondary: #F8FAFC;
+    --secondary-foreground: #0A1128;
+    --warm-cream: #0A1128;
+    --neoblack: #F8FAFC;
+    --border: #F8FAFC;
+    --ring: #FDE047;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans overflow-x-hidden transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .neo-border {
+    border: 2px solid var(--color-border, #000000);
+  }
+
+  .neo-shadow {
+    box-shadow: 4px 4px 0px 0px var(--color-ring, #000000);
+  }
+
+  .neo-shadow-lg {
+    box-shadow: 8px 8px 0px 0px var(--color-ring, #000000);
+  }
+
+  .neo-button {
+    border: 2px solid var(--color-border, #000000);
+    box-shadow: 4px 4px 0px 0px var(--color-ring, #000000);
+    @apply px-4 py-2 bg-white dark:bg-slate-800 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold uppercase;
+  }
+}
+
+.grid-background {
+  background-image: radial-gradient(circle, #00000010 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: move-grid 20s linear infinite;
+}
+
+@keyframes move-grid {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 30px;
+  }
+}

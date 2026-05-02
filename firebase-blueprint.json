@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "Account": {
+      "title": "Account",
+      "description": "Parent account linked to Firebase Auth",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "isAnonymous": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "isAnonymous"]
+    },
+    "Profile": {
+      "title": "Profile",
+      "description": "Child profile under a parent account",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "parentId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "avatar": { "type": "string" },
+        "pinHash": { "type": "string" },
+        "totalXp": { "type": "integer" },
+        "currentLevel": { "type": "integer" },
+        "currentStreak": { "type": "integer" },
+        "lastActivityAt": { "type": "string" },
+        "settings": { "$ref": "ProfileSettings" }
+      },
+      "required": ["id", "parentId", "displayName"]
+    },
+    "ProfileSettings": {
+      "title": "ProfileSettings",
+      "description": "Customization and parental control settings",
+      "type": "object",
+      "properties": {
+        "timerMinutes": { "type": "integer" },
+        "fontScale": { "type": "string", "enum": ["small", "default", "large", "xlarge"] },
+        "ttsEnabled": { "type": "boolean" },
+        "ttsEngine": { "type": "string", "enum": ["native", "google"] },
+        "uppercaseOnly": { "type": "boolean" }
+      }
+    },
+    "ContentItem": {
+      "title": "ContentItem",
+      "description": "Granular learning items (Letters, Syllables, Words, Sentences)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["letter", "syllable", "word", "sentence"] },
+        "text": { "type": "string", "description": "The target text/grapheme" },
+        "speechText": { "type": "string", "description": "Phonetic representation or sound mapping" },
+        "syllables": { "type": "array", "description": "Array of syllables if type is word/sentence" },
+        "imageUrl": { "type": "string" },
+        "audioUrl": { "type": "string" },
+        "difficulty": { "type": "integer", "description": "1 (Starter) to 5 (Master)" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "metadata": { 
+          "type": "object", 
+          "properties": {
+            "vowelCount": { "type": "integer" },
+            "hasConsonantCluster": { "type": "boolean" },
+            "isProperNoun": { "type": "boolean" }
+          }
+        },
+        "order": { "type": "integer", "description": "Natural teaching order" }
+      },
+      "required": ["id", "type", "text"]
+    }
+  },
+  "firestore": {
+    "/accounts/{accountId}": {
+      "schema": "Account",
+      "description": "Parent accounts"
+    },
+    "/profiles/{profileId}": {
+      "schema": "Profile",
+      "description": "Child profiles"
+    },
+    "/contentItems/{itemId}": {
+      "schema": "ContentItem",
+      "description": "Global learning items (The Bank)"
+    },
+    "/profiles/{profileId}/progress/{progressId}": {
+      "schema": { "type": "object" },
+      "description": "Historical learning progress"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(accountId) { return isSignedIn() && request.auth.uid == accountId; }
+    function isAdmin() { 
+      return isSignedIn() && 
+      get(/databases/$(database)/documents/accounts/$(request.auth.uid)).data.role == 'admin'; 
+    }
+    function isValidId(id) { return id is string && id.size() <= 128; }
+
+    // Accounts
+    match /accounts/{accountId} {
+      allow read: if isOwner(accountId) || isAdmin();
+      allow create: if isSignedIn() && request.auth.uid == accountId;
+      allow update: if isOwner(accountId) && 
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+    }
+
+    // Profiles
+    match /profiles/{profileId} {
+      allow read: if isSignedIn() && (resource.data.parentId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && request.resource.data.parentId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.parentId == request.auth.uid || isAdmin());
+      allow delete: if isSignedIn() && resource.data.parentId == request.auth.uid;
+    }
+
+    // Word Bank
+    match /wordBank/{wordId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+    
+    // Progress
+    match /profiles/{profileId}/progress/{progressId} {
+      allow read, write: if isSignedIn() && (
+        get(/databases/$(database)/documents/profiles/$(profileId)).data.parentId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+  }
+}
