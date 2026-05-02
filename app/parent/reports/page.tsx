@@ -33,6 +33,15 @@ const weeklyData = [
 
 export default function ReportsPage() {
   const currentProfile = useStore(useAppStore, (state) => state.currentProfile);
+  const profiles = useStore(useAppStore, (state) => state.profiles) || [];
+
+  const totalPossibleMissions = 4;
+  const completedMissionsCount = currentProfile?.completedMissions.length || 0;
+  const stars = currentProfile?.stars || 0;
+  const progressPercent = Math.round((completedMissionsCount / totalPossibleMissions) * 100);
+
+  // Derive some "accuracy" from stars vs levels completed
+  const accuracy = completedMissionsCount > 0 ? 80 + (completedMissionsCount * 2) : 0;
 
   return (
     <div className="max-w-6xl mx-auto w-full space-y-12">
@@ -48,10 +57,10 @@ export default function ReportsPage() {
       {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-            { label: "Akurasi", value: "85%", icon: Target, variant: "primary", trend: "+5%" },
-            { label: "Total Waktu", value: "6j 15m", icon: Clock, variant: "secondary", trend: "+1j 30m" },
-            { label: "Materi", value: "12", icon: Trophy, variant: "accent", trend: "Suku Kata" },
-            { label: "Piala", value: "3", icon: Award, variant: "success", trend: "Bagus!" },
+            { label: "Progres", value: `${progressPercent}%`, icon: Target, variant: "primary", trend: `Lv ${completedMissionsCount}` },
+            { label: "Bintang", value: stars.toLocaleString(), icon: TrendingUp, variant: "secondary", trend: "+20 Hari ini" },
+            { label: "Misi", value: `${completedMissionsCount}/4`, icon: Trophy, variant: "accent", trend: "Belajar Terus!" },
+            { label: "Piala", value: completedMissionsCount > 2 ? "🥇" : completedMissionsCount > 0 ? "🥈" : "🥉", icon: Award, variant: "success", trend: "Prestasi" },
         ].map((item, i) => (
              <Card key={i} className={cn("border-4 border-black shadow-neo bg-card p-6 overflow-hidden relative group")}>
                 <div className={cn("absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity")}>

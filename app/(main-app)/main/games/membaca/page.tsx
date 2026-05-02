@@ -13,20 +13,29 @@ import { ConfettiBurst } from "@/components/atoms/confetti-burst";
 
 import { useAppStore } from "@/lib/store";
 
+import { useTTS } from "@/hooks/use-tts";
+
 const LEVELS = [
-  { word: "B - U - K - U", image: "📚", audio: "Buku!" },
-  { word: "A - P - E - L", image: "🍎", audio: "Apel!" },
-  { word: "M - E - J - A", image: "🪑", audio: "Meja!" },
+  { word: "B - U - K - U", image: "📚", audio: "Buku" },
+  { word: "A - P - E - L", image: "🍎", audio: "Apel" },
+  { word: "M - E - J - A", image: "🪑", audio: "Meja" },
 ];
 
 export default function MembacaGamePage() {
   const router = useRouter();
+  const { speak } = useTTS();
   const addStars = useAppStore(state => state.addStars);
   const completeMission = useAppStore(state => state.completeMission);
   const [levelIndex, setLevelIndex] = React.useState(0);
   const [isWon, setIsWon] = React.useState(false);
 
   const currentLevel = LEVELS[levelIndex];
+
+  React.useEffect(() => {
+    if (currentLevel) {
+      speak(`Eja kata... ${currentLevel.audio.toLowerCase()}`);
+    }
+  }, [levelIndex, speak, currentLevel]);
 
   const handleNext = () => {
     if (levelIndex < LEVELS.length - 1) {
@@ -95,7 +104,11 @@ export default function MembacaGamePage() {
               ))}
             </div>
             
-            <AudioButton variant="secondary" className="w-full max-w-[240px] mx-auto mt-8 h-16 text-lg font-black uppercase tracking-widest border-2 border-black shadow-neo active:shadow-none translate-y-0 active:translate-y-1">
+            <AudioButton 
+              variant="secondary" 
+              speakText={currentLevel.audio}
+              className="w-full max-w-[240px] mx-auto mt-8 h-16 text-lg font-black uppercase tracking-widest border-2 border-black shadow-neo active:shadow-none translate-y-0 active:translate-y-1"
+            >
               <Play className="w-6 h-6 mr-3 fill-current" />
               Dengar Suara
             </AudioButton>

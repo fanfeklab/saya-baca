@@ -1,10 +1,28 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { NeoText } from "@/components/atoms/neo-text";
-import { BookOpen, Shapes, Music, Paintbrush } from "lucide-react";
+import { BookOpen, Shapes, Music, Paintbrush, Languages, Type } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const GAMES = [
+  {
+    id: "abjad",
+    title: "Abjad",
+    href: "/main/games/abjad",
+    icon: Type,
+    variant: "primary",
+    styles: "bg-primary border-2 border-black shadow-neo hover:shadow-neo-lg text-white",
+    iconWrapper: "bg-white",
+  },
+  {
+    id: "suku-kata",
+    title: "Suku Kata",
+    href: "/main/games/suku-kata",
+    icon: Languages,
+    variant: "secondary",
+    styles: "bg-secondary border-2 border-black shadow-neo hover:shadow-neo-lg text-black",
+    iconWrapper: "bg-white",
+  },
   {
     id: "membaca",
     title: "Membaca",

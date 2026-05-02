@@ -4,12 +4,15 @@ import React from "react";
 import { NeoText } from "@/components/atoms/neo-text";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Check, X, RotateCcw } from "lucide-react";
+import { ArrowLeft, Check, X, RotateCcw, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { IllustrationHolder } from "@/components/atoms/illustration-holder";
 import { ConfettiBurst } from "@/components/atoms/confetti-burst";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
+
+import { useTTS } from "@/hooks/use-tts";
+import { GameHeader } from "@/components/molecules/game-header";
 
 const LEVELS = [
   { question: "1 + 1 = ?", answer: 2, options: [1, 2, 3, 4] },
@@ -19,18 +22,36 @@ const LEVELS = [
 
 export default function BerhitungGamePage() {
   const router = useRouter();
+  const { speak } = useTTS();
   const addStars = useAppStore(state => state.addStars);
   const completeMission = useAppStore(state => state.completeMission);
+  const loseEnergy = useAppStore(state => state.loseEnergy);
+  const energy = useAppStore(state => state.currentProfile?.energy ?? 0);
+
   const [levelIndex, setLevelIndex] = React.useState(0);
   const [isWon, setIsWon] = React.useState(false);
   const [selectedAnswer, setSelectedAnswer] = React.useState<number | null>(null);
 
   const currentLevel = LEVELS[levelIndex];
 
+  React.useEffect(() => {
+    if (energy <= 0 && !isWon) {
+      setTimeout(() => setIsWon(true), 0);
+    }
+  }, [energy, isWon]);
+
+  React.useEffect(() => {
+    if (currentLevel && energy > 0) {
+      const q = currentLevel.question.replace('?', '').replace('=', '').trim();
+      speak(`Berapa hasil dari... ${q}?`);
+    }
+  }, [levelIndex, speak, currentLevel, energy]);
+
   const handleAnswer = (option: number) => {
     setSelectedAnswer(option);
     setTimeout(() => {
       if (option === currentLevel.answer) {
+        speak("Pintar! Jawabanmu Benar!");
         if (levelIndex < LEVELS.length - 1) {
           setLevelIndex(prev => prev + 1);
           setSelectedAnswer(null);
@@ -40,6 +61,8 @@ export default function BerhitungGamePage() {
           completeMission('berhitung');
         }
       } else {
+        speak("Aduh, salah... Coba lagi!");
+        loseEnergy();
         setSelectedAnswer(null);
       }
     }, 1000);
@@ -52,31 +75,54 @@ export default function BerhitungGamePage() {
   };
 
   if (isWon) {
+    const isSuccess = energy > 0;
     return (
-      <div className="flex flex-col p-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-28 min-h-[70vh] items-center justify-center text-center">
+      <div className="flex flex-col p-8 gap-8 animate-in fade-in zoom-in duration-700 pb-32 min-h-[80vh] items-center justify-center text-center max-w-md mx-auto">
         <ConfettiBurst>
-          <IllustrationHolder variant="success" size="xl" emoji="🎉" className="mx-auto mb-6" />
+          <IllustrationHolder 
+            variant={isSuccess ? "success" : "destructive"} 
+            size="xl" 
+            emoji={isSuccess ? "🎉" : "😴"} 
+            className="mx-auto mb-6 scale-125 border-4 border-black shadow-neo-lg" 
+          />
         </ConfettiBurst>
-        <NeoText variant="title" className="text-3xl text-success">Hebat!</NeoText>
-        <NeoText variant="body" className="mb-6">Kamu jago sekali berhitung!</NeoText>
+        <div className="space-y-4">
+          <NeoText variant="title" stroke className={cn("text-5xl", isSuccess ? "text-success" : "text-destructive")}>
+            {isSuccess ? "Hebat!" : "Istirahat!"}
+          </NeoText>
+          <NeoText variant="subtitle" className="text-muted-foreground uppercase tracking-widest text-sm font-black">
+            {isSuccess ? "Misi Berhitung Selesai" : "Energi Kamu Habis"}
+          </NeoText>
+        </div>
+        <NeoText variant="body" className="font-medium">
+          {isSuccess 
+            ? "Kamu jago sekali berhitung! Teruslah berlatih ya!" 
+            : "Waktunya istirahat sejenak untuk mengisi kembali energimu."}
+        </NeoText>
         
-        <div className="flex gap-4 w-full">
-          <Button variant="outline" className="flex-1" onClick={handleReset}>
-            <RotateCcw className="w-5 h-5 mr-2" />
-            Main Lagi
+        <div className="flex flex-col gap-4 w-full mt-8">
+          <Button variant="default" className="w-full h-16 text-xl font-black uppercase tracking-widest shadow-neo hover:shadow-neo-lg active:shadow-none transition-all text-black border-2 border-black" onClick={() => router.push("/main/learn")}>
+            Ke Beranda <Home className="ml-2 size-6 text-black" />
           </Button>
-          <Button variant="default" className="flex-1" onClick={() => router.push("/main/learn")}>
-            Selesai
-          </Button>
+          {isSuccess && (
+            <Button variant="ghost" className="w-full text-foreground/60 font-black uppercase tracking-tight text-xs" onClick={handleReset}>
+              <RotateCcw className="w-4 h-4 mr-2" /> Ulangi Petualangan
+            </Button>
+          )}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col p-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-28">
-      {/* Header */}
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
+      <GameHeader 
+        title="DUNIA ANGKA"
+        currentLevel={levelIndex + 1}
+        totalLevels={LEVELS.length}
+      />
+
+      <div className="flex items-center gap-4 hidden">
         <Button 
           variant="outline" 
           size="icon" 
@@ -85,12 +131,6 @@ export default function BerhitungGamePage() {
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <div className="flex-1">
-          <NeoText variant="title" className="text-2xl uppercase italic">Berhitung</NeoText>
-        </div>
-        <div className="font-bold text-sm bg-success/20 text-success font-mono px-3 py-1 rounded-full border-2 border-success">
-          {levelIndex + 1} / {LEVELS.length}
-        </div>
       </div>
 
       {/* Main Game Area */}

@@ -12,10 +12,14 @@ import { cn } from "@/lib/utils";
 
 import { useAppStore } from "@/lib/store";
 
+import { useTTS } from "@/hooks/use-tts";
+import { GameHeader } from "@/components/molecules/game-header";
+
 const COLORS = ["#FF5733", "#33FF57", "#3357FF", "#FDE047", "#A855F7", "#000000"];
 
 export default function MewarnaiGamePage() {
   const router = useRouter();
+  const { speak } = useTTS();
   const addStars = useAppStore(state => state.addStars);
   const completeMission = useAppStore(state => state.completeMission);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -24,6 +28,10 @@ export default function MewarnaiGamePage() {
   const [color, setColor] = React.useState(COLORS[0]);
   const [size, setSize] = React.useState(10);
   const [isWon, setIsWon] = React.useState(false);
+
+  React.useEffect(() => {
+    speak("Ayo menggambar hasil karyamu di sini!");
+  }, [speak]);
 
   const handleFinish = () => {
     setIsWon(true);
@@ -135,19 +143,14 @@ export default function MewarnaiGamePage() {
     <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button 
-          variant="outline" 
-          size="icon-sm" 
-          onClick={() => router.back()}
-          className="rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-none border-2 border-black bg-background"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1 text-center">
-          <NeoText variant="subtitle" stroke className="text-2xl uppercase tracking-tighter italic">Mari Menggambar</NeoText>
-        </div>
-        <Button size="icon-sm" variant="default" onClick={handleFinish} className="rounded-xl border-2 border-black shadow-neo-sm text-black">
-           <Check className="size-5" />
+        <GameHeader 
+            title="DUNIA GAMBAR"
+            currentLevel={1}
+            totalLevels={1}
+            className="flex-1"
+        />
+        <Button size="icon" variant="default" onClick={handleFinish} className="rounded-xl border-4 border-black shadow-neo-sm text-black h-14 w-14 mt-1 active:shadow-none translate-y-0 active:translate-y-1">
+           <Check className="size-8" strokeWidth={3} />
         </Button>
       </div>
 

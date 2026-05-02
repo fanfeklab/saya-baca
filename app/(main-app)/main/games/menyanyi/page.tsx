@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils";
 
 import { useAppStore } from "@/lib/store";
 
+import { useTTS } from "@/hooks/use-tts";
+import { GameHeader } from "@/components/molecules/game-header";
+
 const LYRICS = [
   "Bintang kecil",
   "Di langit yang biru",
@@ -20,11 +23,16 @@ const LYRICS = [
 
 export default function MenyanyiGamePage() {
   const router = useRouter();
+  const { speak } = useTTS();
   const addStars = useAppStore(state => state.addStars);
   const completeMission = useAppStore(state => state.completeMission);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [currentLine, setCurrentLine] = React.useState(0);
   const [isFinished, setIsFinished] = React.useState(false);
+
+  React.useEffect(() => {
+    speak("Mari menyanyi lagu Bintang Kecil bersama!");
+  }, [speak]);
 
   // Fake karaoke logic
   React.useEffect(() => {
@@ -47,22 +55,11 @@ export default function MenyanyiGamePage() {
   return (
     <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button 
-          variant="outline" 
-          size="icon-sm" 
-          onClick={() => router.back()}
-          className="rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-none border-2 border-black bg-background"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1">
-          <NeoText variant="subtitle" stroke className="text-2xl uppercase tracking-tighter italic">Mari Menyanyi</NeoText>
-        </div>
-        <div className="font-bold text-[10px] bg-secondary/20 text-secondary-foreground px-3 py-1 rounded-full border-2 border-secondary uppercase tracking-widest">
-          ⭐ Bintang Kecil
-        </div>
-      </div>
+      <GameHeader 
+        title="DUNIA MUSIK"
+        currentLevel={currentLine + 1}
+        totalLevels={LYRICS.length}
+      />
 
       {/* Main Game Area */}
       <Card className="mt-4 bg-background border-2 border-black shadow-neo-lg text-center overflow-hidden">
