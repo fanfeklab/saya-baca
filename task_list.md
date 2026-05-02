@@ -12,90 +12,90 @@
 ---
 
 ## 🧩 Milestone 2: Atoms (Glass & Seamless Theme)
-- [ ] 2.1 Typography
-- [ ] 2.2 Button (all variants - Glass, Solid, Outline)
-- [ ] 2.3 Badge
-- [ ] 2.4 Indicator
-- [ ] 2.5 Avatar
-- [ ] 2.6 Skeleton
-- [ ] 2.7 Spinner
-- [ ] 2.8 Separator
+- [x] 2.1 Typography
+- [x] 2.2 Button (all variants - Glass, Solid, Outline)
+- [x] 2.3 Badge
+- [x] 2.4 Indicator
+- [x] 2.5 Avatar
+- [x] 2.6 Skeleton
+- [x] 2.7 Spinner
+- [x] 2.8 Separator
 - [ ] 2.9 Icon (Lucide + Gamified Custom SVGs)
-- [ ] 2.10 Input (Glassmorphic)
-- [ ] 2.11 Textarea
-- [ ] 2.12 Checkbox
-- [ ] 2.13 Radio
-- [ ] 2.14 Toggle/Switch
-- [ ] 2.15 Select
-- [ ] 2.16 Progress Bar (Standard)
-- [ ] 2.17 Tooltip
-- [ ] 2.18 Theme Toggle
-- [ ] *[NEW]* 2.19 MeshGradientBg (Global Seamless Background)
-- [ ] *[NEW]* 2.20 GlassPanel (Base Glassmorphism Primitive)
+- [x] 2.10 Input (Glassmorphic via Shadcn)
+- [x] 2.11 Textarea (Shadcn)
+- [x] 2.12 Checkbox (Shadcn)
+- [x] 2.13 Radio (Shadcn)
+- [x] 2.14 Toggle/Switch (Shadcn)
+- [x] 2.15 Select (Shadcn)
+- [x] 2.16 Progress Bar (Standard) (Shadcn)
+- [x] 2.17 Tooltip (Shadcn)
+- [x] 2.18 Theme Toggle
+- [x] *[NEW]* 2.19 MeshGradientBg (Global Seamless Background)
+- [x] *[NEW]* 2.20 GlassPanel (Base Glassmorphism Primitive)
 
 ---
 
 ## 🧬 Milestone 3: Molecules
-- [ ] 3.1 FormField
-- [ ] 3.2 FloatingLabelInput
-- [ ] 3.3 FileDropzone
-- [ ] 3.4 SearchBar
-- [ ] 3.5 Breadcrumb
-- [ ] 3.6 Pagination
-- [ ] 3.7 Rating
-- [ ] 3.8 GlassCard
-- [ ] 3.9 Alert
-- [ ] 3.10 Toast/Snackbar
-- [ ] 3.11 DropdownMenu
-- [ ] 3.12 SpeedDial/FAB
-- [ ] 3.13 AvatarGroup
-- [ ] 3.14 Chip/Tag
-- [ ] 3.15 EmptyState
-- [ ] 3.16 SkeletonCard
-- [ ] *[NEW]* 3.17 XPProgressBar (Gamified with Glow)
-- [ ] *[NEW]* 3.18 AudioToggle (For Howler.js SFX control)
+- [x] 3.1 FormField (Shadcn Form)
+- [x] 3.2 FloatingLabelInput
+- [x] 3.3 FileDropzone
+- [x] 3.4 SearchBar
+- [x] 3.5 Breadcrumb (Shadcn)
+- [x] 3.6 Pagination (Shadcn)
+- [x] 3.7 Rating
+- [x] 3.8 GlassCard
+- [x] 3.9 Alert (Shadcn)
+- [x] 3.10 Toast/Snackbar (Shadcn Sonner)
+- [x] 3.11 DropdownMenu (Shadcn)
+- [x] 3.12 SpeedDial/FAB
+- [x] 3.13 AvatarGroup
+- [x] 3.14 Chip/Tag (Using Badge)
+- [x] 3.15 EmptyState
+- [x] 3.16 SkeletonCard
+- [x] *[NEW]* 3.17 XPProgressBar (Gamified with Glow)
+- [x] *[NEW]* 3.18 AudioToggle (For Howler.js SFX control)
 
 ---
 
 ## 🫀 Milestone 4: Organisms
 - [ ] 4.1 Topbar (minimal, standard, compact)
 - [ ] 4.2 Sidebar (collapsible)
-- [ ] 4.3 Bottom Navigation (Apple-style Floating Dock)
+- [x] 4.3 Bottom Navigation (Apple-style Floating Dock)
 - [ ] 4.4 Hero Section
-- [ ] 4.5 Login Card (Frosted Glass)
-- [ ] 4.6 Keypad Card (For Parent PIN)
+- [x] 4.5 Login Card (Frosted Glass)
+- [x] 4.6 Keypad Card (For Parent PIN)
 - [ ] 4.7 Profile Card (avatar inside box, avatar popover)
 - [ ] 4.8 Settings Section
-- [ ] 4.9 Data Table
+- [x] 4.9 Data Table (Shadcn Table)
 - [ ] 4.10 Dashboard Widget
 - [ ] 4.11 Stepper
-- [ ] 4.12 Tabs
-- [ ] 4.13 Accordion
-- [ ] 4.14 Modal/Dialog
-- [ ] 4.15 Drawer/Sheet
-- [ ] 4.16 Popover
-- [ ] 4.17 Carousel
+- [x] 4.12 Tabs (Shadcn Tabs)
+- [x] 4.13 Accordion (Shadcn Accordion)
+- [x] 4.14 Modal/Dialog (Shadcn Dialog)
+- [x] 4.15 Drawer/Sheet (Shadcn Sheet)
+- [x] 4.16 Popover (Shadcn)
+- [x] 4.17 Carousel (Shadcn Carousel)
 - [ ] 4.18 Footer
 - [ ] 4.19 Cookie Consent
 - [ ] 4.20 Chart Widget (Recharts v3)
-- [ ] 4.21 Flash Card (Interactive learning)
+- [x] 4.21 Flash Card (Interactive learning)
 - [ ] 4.22 Journey Map Node
 - [ ] 4.23 Achievement Badge
-- [ ] *[NEW]* 4.24 PageTransitionWrapper (Framer Motion orchestration)
-- [ ] *[NEW]* 4.25 RewardOverlay (Confetti/Sticker unlocks)
+- [x] *[NEW]* 4.24 PageTransitionWrapper (Framer Motion orchestration)
+- [x] *[NEW]* 4.25 RewardOverlay (Confetti/Sticker unlocks)
 
 ---
 
 ## 🏗️ Milestone 4.5: Templates (NEW STRATUM)
-- [ ] *[NEW]* T.1 ImmersiveChildLayout (No borders, global BG, floating dock)
-- [ ] *[NEW]* T.2 AuthGlassLayout (Split screen/modal with blurred backdrop)
-- [ ] *[NEW]* T.3 ParentBentoLayout (Sidebar + Premium Blurred Bento Grid)
+- [x] *[NEW]* T.1 ImmersiveChildLayout (No borders, global BG, floating dock)
+- [x] *[NEW]* T.2 AuthGlassLayout (Split screen/modal with blurred backdrop)
+- [x] *[NEW]* T.3 ParentBentoLayout (Sidebar + Premium Blurred Bento Grid)
 
 ---
 
 ## 📱 Milestone 5: Screen Pages — Wave 1 (General & Profile)
-- [ ] 5.1 Landing Page
-- [ ] 5.2 Login Page
+- [x] 5.1 Landing Page
+- [x] 5.2 Login Page
 - [ ] 5.3 Keypad Page
 - [ ] 5.4 Forgot pin
 - [ ] 5.5 Verify Email
@@ -108,7 +108,7 @@
 ---
 
 ## 🕹️ Milestone 6: Screen Pages — Wave 2 (Learning & Gamification)
-- [ ] 6.1 Learning Path
+- [x] 6.1 Learning Path
 - [ ] 6.2 Exercise
 - [ ] 6.3 Quiz
 - [ ] 6.4 Mini Game (coming soon menggambar, tetris)
@@ -126,7 +126,7 @@
 - [ ] 7.3 Room Lobby
 - [ ] 7.4 Chat Room
 - [ ] 7.5 Admin Dashboard
-- [ ] 7.6 Parent Dashboard
+- [x] 7.6 Parent Dashboard
 - [ ] 7.7 Data Management Table
 - [ ] 7.8 Content Editor
 - [ ] 7.9 System Settings
