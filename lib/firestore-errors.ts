@@ -27,30 +27,56 @@ export interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  // Safely extract a string message from the error
+  let message = "Unknown Error";
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (typeof error === 'string') {
+    message = error;
+  } else {
+    try {
+      message = String(error);
+    } catch {
+      message = "[Unstringifiable Error Object]";
+    }
+  }
+
   const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
+    error: message,
     authInfo: {
-      userId: auth.currentUser?.uid,
-      email: auth.currentUser?.email,
-      emailVerified: auth.currentUser?.emailVerified,
-      isAnonymous: auth.currentUser?.isAnonymous,
-      tenantId: auth.currentUser?.tenantId,
-      providerInfo: auth.currentUser?.providerData?.map(provider => ({
-        providerId: provider.providerId,
-        email: provider.email,
-      })) || []
+      userId: auth.currentUser?.uid || null,
+      email: auth.currentUser?.email || null,
+      emailVerified: auth.currentUser?.emailVerified || null,
+      isAnonymous: auth.currentUser?.isAnonymous || null,
+      tenantId: auth.currentUser?.tenantId || null,
+      providerInfo: (auth.currentUser?.providerData || []).map(provider => ({
+        providerId: String(provider.providerId || ""),
+        email: String(provider.email || ""),
+      }))
     },
     operationType,
-    path
+    path: path ? String(path) : null
+  };
+  
+  let errorMessage: string;
+  try {
+    errorMessage = JSON.stringify(errInfo);
+  } catch (stringifyError) {
+    // Fallback if stringify fails for some reason
+    console.error("Failed to stringify error info:", stringifyError);
+    errorMessage = JSON.stringify({
+      error: message,
+      operationType,
+      path,
+      stringifyFailure: true
+    });
   }
   
-  const errorMessage = JSON.stringify(errInfo);
-  console.error('Firestore Error: ', errorMessage);
+  console.error('Firestore Error Details:', errorMessage);
   
-  // Custom message for the user if offline - log but don't crash the entire app flow
-  if (errInfo.error.includes('offline')) {
-    console.warn("Firestore is operating in offline mode. Changes will sync once online.");
-    return; // Don't throw for offline, let Firebase handle it
+  if (message.toLowerCase().includes('offline')) {
+    console.warn("Operation deferred: Firestore is currently offline.");
+    return;
   }
 
   throw new Error(errorMessage);

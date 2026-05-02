@@ -78,11 +78,15 @@ export function ParentGuard({ children, onSuccess }: ParentGuardProps) {
       try {
         handleFirestoreError(e, OperationType.GET, path);
       } catch (errInfo: any) {
-        const info = JSON.parse(errInfo.message);
-        if (info.error.includes('offline')) {
-          setError("KONEKSI OFFLINE. COBA LAGI.");
-        } else {
-          setError("GANGGUAN SERVER");
+        try {
+          const info = JSON.parse(errInfo.message);
+          if (info.error && info.error.toLowerCase().includes('offline')) {
+            setError("KONEKSI OFFLINE. COBA LAGI.");
+          } else {
+            setError("GANGGUAN SERVER");
+          }
+        } catch {
+          setError("GANGGUAN SISTEM");
         }
       }
     }
