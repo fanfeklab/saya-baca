@@ -12,39 +12,45 @@ import { useTTS } from "@/hooks/use-tts";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const PAGES = [
+  ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+  ["J", "K", "L", "M", "N", "O", "P", "Q", "R"],
+  ["S", "T", "U", "V", "W", "X", "Y", "Z"]
+];
 
 export default function AbjadGamePage() {
   const router = useRouter();
   const { speak } = useTTS();
-  const [index, setIndex] = React.useState(0);
-  const [viewedIndices, setViewedIndices] = React.useState<Set<number>>(new Set([0]));
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [viewedIndices, setViewedIndices] = React.useState<Set<string>>(new Set(["A"]));
   const [isFinished, setIsFinished] = React.useState(false);
 
-  const currentLetter = ALPHABET[index];
+  const currentPage = PAGES[pageIndex];
 
-  React.useEffect(() => {
-    speak(currentLetter);
-  }, [index, speak, currentLetter]);
+  const handleLetterClick = (letter: string) => {
+    speak(letter);
+    setViewedIndices(prev => new Set(prev).add(letter));
+    
+    // Auto transition logic if it was the last letter of the page (optional, but let's keep it manual for better learning)
+  };
 
-  const handleNext = () => {
-    if (index < ALPHABET.length - 1) {
-      const nextIndex = index + 1;
-      setIndex(nextIndex);
-      setViewedIndices(prev => new Set(prev).add(nextIndex));
+  const handleNextPage = () => {
+    if (pageIndex < PAGES.length - 1) {
+      setPageIndex(prev => prev + 1);
     } else {
       setIsFinished(true);
     }
   };
 
-  const handlePrev = () => {
-    if (index > 0) {
-      setIndex(prev => prev - 1);
+  const handlePrevPage = () => {
+    if (pageIndex > 0) {
+      setPageIndex(prev => prev - 1);
     }
   };
 
-  const allViewed = viewedIndices.size === ALPHABET.length;
-  const progressPercent = (viewedIndices.size / ALPHABET.length) * 100;
+  const totalLetters = 26;
+  const progressPercent = (viewedIndices.size / totalLetters) * 100;
+  const allViewedInCurrentPage = currentPage.every(l => viewedIndices.has(l));
 
   if (isFinished) {
     return (
@@ -74,78 +80,85 @@ export default function AbjadGamePage() {
   }
 
   return (
-    <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
+    <div className="flex flex-col p-6 gap-6 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto min-h-screen overflow-hidden">
       <GameHeader 
         title="MENGENAL ABJAD"
-        currentLevel={index + 1}
-        totalLevels={ALPHABET.length}
+        currentLevel={pageIndex + 1}
+        totalLevels={PAGES.length}
       />
 
-      <Card className="mt-4 border-4 border-black shadow-neo-lg overflow-hidden bg-card rounded-[2.5rem]">
-        <CardContent className="p-10 flex flex-col items-center gap-10">
-            <div 
-                className="size-56 bg-background border-4 border-black shadow-neo rounded-[3rem] flex items-center justify-center cursor-pointer hover:rotate-3 transition-all active:scale-95 group relative"
-                onClick={() => speak(currentLetter)}
-            >
-                <NeoText variant="title" stroke className="text-[120px] leading-none text-primary italic drop-shadow-lg">{currentLetter}</NeoText>
-                <div className="absolute top-4 right-4 animate-bounce bg-accent p-2 rounded-full border-2 border-black">
-                    <Play className="size-5 text-black fill-black" />
-                </div>
-            </div>
-
-            <div className="flex flex-col items-center gap-8 w-full">
-                <div className="w-full space-y-3">
-                    <div className="flex justify-between items-end px-1">
-                        <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest opacity-40">Progres Belajar</NeoText>
-                        <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest text-primary">{Math.round(progressPercent)}%</NeoText>
-                    </div>
-                    <Progress value={progressPercent} className="h-4 border-4 border-black shadow-neo-sm bg-background rounded-full overflow-hidden" indicatorClassName="bg-primary" />
-                </div>
-
-                <div className="flex items-center gap-6 w-full">
-                    <Button 
-                        variant="outline" 
-                        size="icon" 
-                        className="h-14 w-14 border-4 border-black shadow-neo-sm active:shadow-none bg-background disabled:opacity-30 rounded-2xl"
-                        disabled={index === 0}
-                        onClick={handlePrev}
-                    >
-                        <ArrowLeft className="size-7" strokeWidth={3} />
-                    </Button>
-                    
-                    <div className="flex-1 flex justify-center">
-                        <NeoText variant="title" className="text-4xl italic">{index + 1} <span className="text-muted-foreground/30 mx-1">/</span> {ALPHABET.length}</NeoText>
-                    </div>
-
-                    <Button 
-                        variant="default" 
-                        size="icon" 
-                        className="h-14 w-14 border-4 border-black shadow-neo active:shadow-none bg-accent disabled:opacity-30 rounded-2xl"
-                        onClick={handleNext}
-                    >
-                        <ArrowRight className="size-7" strokeWidth={3} />
-                    </Button>
-                </div>
-            </div>
-        </CardContent>
-      </Card>
-
-      <div className="flex justify-center mt-2">
-         {allViewed ? (
-            <Button 
-                variant="outline" 
-                className="h-16 px-10 border-4 border-black shadow-neo bg-success text-black font-black uppercase tracking-widest text-lg rounded-2xl hover:shadow-neo-lg transition-all"
-                onClick={() => setIsFinished(true)}
-            >
-                Selesai Belajar <CheckCircle2 className="ml-3 size-6" strokeWidth={3} />
-            </Button>
-         ) : (
-            <div className="flex items-center gap-3 px-6 py-4 bg-muted/50 border-4 border-dashed border-black/10 rounded-2xl">
-                <Lock className="size-4 opacity-40" strokeWidth={3} />
-                <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest opacity-40">Kenali semua huruf untuk lanjut kuis</NeoText>
-            </div>
-         )}
+      <div className="w-full space-y-2 mt-2">
+          <div className="flex justify-between items-end px-1">
+              <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest opacity-40">Progres Mengenal Huruf</NeoText>
+              <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest text-primary">{Math.round(progressPercent)}%</NeoText>
+          </div>
+          <Progress value={progressPercent} className="h-3 border-4 border-black shadow-neo-sm bg-background rounded-full overflow-hidden" indicatorClassName="bg-primary" />
       </div>
+
+      <div className="grid grid-cols-3 gap-4 mt-2">
+        {currentPage.map((letter) => {
+          const isViewed = viewedIndices.has(letter);
+          return (
+            <button
+              key={letter}
+              onClick={() => handleLetterClick(letter)}
+              className={cn(
+                "aspect-square flex items-center justify-center rounded-[2rem] border-4 border-black shadow-neo-sm transition-all transform active:scale-90 active:shadow-none translate-y-0 active:translate-y-1 relative group",
+                isViewed ? "bg-background shadow-none translate-y-0.5 border-black/40" : "bg-card shadow-neo"
+              )}
+            >
+              <NeoText 
+                variant="title" 
+                stroke={!isViewed}
+                className={cn(
+                  "text-4xl italic",
+                  isViewed ? "text-primary/40" : "text-primary"
+                )}
+              >
+                {letter}
+              </NeoText>
+              {isViewed && (
+                 <div className="absolute top-2 right-2">
+                    <CheckCircle2 className="size-4 text-success fill-success/20 stroke-[3px]" />
+                 </div>
+              )}
+              {!isViewed && (
+                <div className="absolute -top-1 -right-1 size-3 bg-accent rounded-full border-2 border-black animate-pulse" />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-between gap-6 mt-auto py-4">
+          <Button 
+              variant="outline" 
+              className="flex-1 h-16 border-4 border-black shadow-neo active:shadow-none rounded-2xl bg-background disabled:opacity-20"
+              disabled={pageIndex === 0}
+              onClick={handlePrevPage}
+          >
+              <ArrowLeft className="size-6 mr-2" strokeWidth={3} /> <span className="font-black">KEMBALI</span>
+          </Button>
+
+          <Button 
+              variant="default" 
+              className={cn(
+                  "flex-1 h-16 border-4 border-black shadow-neo active:shadow-none rounded-2xl",
+                  allViewedInCurrentPage ? "bg-accent" : "bg-muted"
+              )}
+              onClick={handleNextPage}
+              disabled={!allViewedInCurrentPage && viewedIndices.size < totalLetters}
+          >
+              <span className="font-black">{pageIndex === PAGES.length - 1 ? "SELESAI" : "LANJUT"}</span> <ArrowRight className="size-6 ml-2" strokeWidth={3} />
+          </Button>
+      </div>
+
+      {!allViewedInCurrentPage && (
+          <div className="flex items-center justify-center gap-3 px-6 py-4 bg-muted/50 border-4 border-dashed border-black/10 rounded-2xl">
+              <Lock className="size-4 opacity-40" strokeWidth={3} />
+              <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest opacity-40">Ketuk semua huruf untuk lanjut</NeoText>
+          </div>
+      )}
     </div>
   );
 }
