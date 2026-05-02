@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Button } from '@/components/atoms/button';
 import { auth } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -62,7 +63,7 @@ export default function LoginPage() {
             disabled={loading}
             className="w-full bg-white flex items-center justify-center gap-3 py-8"
           >
-            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-6 h-6" />
+            <Image src="https://www.google.com/favicon.ico" alt="Google" width={24} height={24} className="w-6 h-6" unoptimized referrerPolicy="no-referrer" />
             <span className="text-lg font-black uppercase">Masuk dengan Google</span>
           </Button>
           

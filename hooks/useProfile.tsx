@@ -55,9 +55,7 @@ export function ProfileProvider({ children }: { children: React.ReactNode }) {
     if (!user) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setProfiles([]);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveProfile(null);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }

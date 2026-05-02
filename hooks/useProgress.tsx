@@ -44,7 +44,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     if (!activeProfile) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setProgress({});
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }
