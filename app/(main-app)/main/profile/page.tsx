@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import { useAppStore } from "@/lib/store";
 import { useStore } from "@/hooks/use-store";
 
+import { GameHeader } from "@/components/molecules/game-header";
+
 export default function ProfilPage() {
   const router = useRouter();
   const currentProfile = useStore(useAppStore, (state) => state.currentProfile);
@@ -39,7 +41,7 @@ export default function ProfilPage() {
         avatar: seed
       });
       toast.success("Profil berhasil disimpan!", {
-          className: "border-2 border-black shadow-neo font-black",
+          className: "border-4 border-black shadow-neo font-black rounded-2xl",
       });
     }
   };
@@ -51,25 +53,15 @@ export default function ProfilPage() {
 
   return (
     <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
-      {/* Header with Back Button */}
-      <div className="flex items-center gap-4">
-        <Button 
-          variant="outline" 
-          size="icon-sm" 
-          onClick={() => router.back()}
-          className="rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-none border-2 border-black"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <NeoText variant="subtitle" stroke className="text-3xl uppercase tracking-tighter italic">PENGATURAN PROFIL</NeoText>
-      </div>
+      {/* Header */}
+      <GameHeader title="PENGATURAN PROFIL" currentLevel={0} totalLevels={0} />
 
-      <Card className="border-2 border-black shadow-neo-lg bg-card/50 backdrop-blur-sm overflow-visible">
+      <Card className="border-4 border-black shadow-neo-lg bg-card overflow-visible rounded-3xl">
         <CardContent className="p-8 flex flex-col gap-8">
           {/* Avatar Section */}
           <div className="flex flex-col items-center gap-6 relative">
              <div className="relative group">
-               <Avatar className="w-40 h-40 border-4 border-black shadow-neo bg-background transition-transform group-hover:scale-105">
+               <Avatar className="w-40 h-40 border-4 border-black shadow-neo bg-background transition-transform group-hover:scale-105 rounded-3xl">
                   <AvatarImage src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`} alt="Avatar" />
                   <AvatarFallback className="font-black text-2xl">KID</AvatarFallback>
                </Avatar>
@@ -77,38 +69,38 @@ export default function ProfilPage() {
                 variant="accent" 
                 size="icon" 
                 onClick={randomizeAvatar} 
-                className="absolute -bottom-2 -right-2 rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-none border-2 border-black"
+                className="absolute -bottom-2 -right-2 h-14 w-14 rounded-2xl shadow-neo-sm hover:shadow-neo active:shadow-none border-4 border-black"
                >
-                 <RefreshCw className="w-5 h-5" />
+                 <RefreshCw className="w-6 h-6" strokeWidth={3} />
                </Button>
              </div>
-             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-widest text-xs">Pilih Karaktermu</NeoText>
+             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Ketuk tombol pink untuk ganti karakter</NeoText>
           </div>
 
           {/* Form Section */}
           <div className="space-y-6">
             <div className="space-y-2">
-                <NeoText variant="body" className="font-black uppercase tracking-widest text-[10px]">Nama Panggilan</NeoText>
+                <NeoText variant="body" className="font-black uppercase tracking-widest text-[10px] ml-1">Nama Panggilan</NeoText>
                 <input 
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border-2 border-black bg-background font-bold focus:ring-2 ring-primary outline-none"
+                    className="w-full h-14 px-6 rounded-2xl border-4 border-black bg-background font-black text-lg focus:shadow-neo shadow-neo-sm outline-none transition-all placeholder:opacity-30"
                     placeholder="Masukkan nama..."
                 />
             </div>
             <div className="space-y-2">
-                <NeoText variant="body" className="font-black uppercase tracking-widest text-[10px]">Umur Petualang (Tahun)</NeoText>
+                <NeoText variant="body" className="font-black uppercase tracking-widest text-[10px] ml-1">Umur Petualang (Tahun)</NeoText>
                 <input 
                     type="number"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    className="w-full h-12 px-4 rounded-xl border-2 border-black bg-background font-bold focus:ring-2 ring-primary outline-none"
+                    className="w-full h-14 px-6 rounded-2xl border-4 border-black bg-background font-black text-lg focus:shadow-neo shadow-neo-sm outline-none transition-all"
                 />
             </div>
           </div>
 
-          <Button variant="default" className="w-full h-16 text-xl font-black uppercase tracking-widest shadow-neo hover:shadow-neo-lg active:shadow-none transition-all mt-4 border-2 border-black text-black" onClick={handleSave}>
-            <Save className="w-6 h-6 mr-2" /> Simpan Perubahan
+          <Button variant="default" className="w-full h-16 text-xl font-black uppercase tracking-widest shadow-neo hover:shadow-neo-lg active:shadow-none transition-all mt-4 border-4 border-black text-black rounded-2xl" onClick={handleSave}>
+            <Save className="w-6 h-6 mr-3" strokeWidth={3} /> Simpan Perubahan
           </Button>
 
         </CardContent>
@@ -116,7 +108,7 @@ export default function ProfilPage() {
       
       <Button 
         variant="ghost" 
-        className="w-full h-12 text-destructive font-black uppercase tracking-widest hover:bg-destructive/10" 
+        className="w-full h-14 text-destructive font-black uppercase tracking-widest hover:bg-destructive/10 rounded-2xl" 
         onClick={() => router.push('/login')}
       >
         Keluar Dari Akun

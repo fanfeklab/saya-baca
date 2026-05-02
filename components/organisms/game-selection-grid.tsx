@@ -63,25 +63,23 @@ const GAMES = [
 
 export function GameSelectionGrid() {
   return (
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-2 gap-4 sm:gap-6">
       {GAMES.map((game) => {
         const Icon = game.icon;
         return (
           <Link 
             key={game.id} 
             href={game.href} 
-            className="block outline-none focus-visible:ring-4 ring-ring rounded-xl"
+            className="block outline-none active:scale-95 transition-transform"
           >
             <Card className={cn(
-               "h-full transition-all cursor-pointer hover:-translate-y-1 hover:-translate-x-1 active:translate-y-0 active:translate-x-0 active:shadow-none py-6",
+               "h-48 transition-all cursor-pointer border-4 border-black shadow-neo-sm hover:shadow-neo active:shadow-none flex flex-col items-center justify-center text-center p-4",
                game.styles
             )}>
-              <CardContent className="p-4 flex flex-col items-center justify-center text-center gap-4">
-                <div className={cn("p-4 rounded-2xl border-2 border-black shadow-neo-sm", game.iconWrapper)}>
-                   <Icon className="w-10 h-10 text-black" strokeWidth={2.5} />
+                <div className={cn("size-16 rounded-2xl border-4 border-black shadow-neo-sm flex items-center justify-center mb-4 transition-transform group-hover:scale-110", game.iconWrapper)}>
+                   <Icon className="w-8 h-8 text-black" strokeWidth={3} />
                 </div>
-                <NeoText variant="body" className="font-black text-xl tracking-wide uppercase italic">{game.title}</NeoText>
-              </CardContent>
+                <NeoText variant="body" className="font-black text-lg tracking-wide uppercase italic leading-tight">{game.title}</NeoText>
             </Card>
           </Link>
         );

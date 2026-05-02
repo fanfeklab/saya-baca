@@ -26,14 +26,14 @@ export default function HomeAppPage() {
   return (
     <div className="flex flex-col p-6 gap-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
       
-      {/* 🚀 Daily Focus Section */}
-      <section className="space-y-6">
-        <div className="flex items-end justify-between px-2">
-          <div className="space-y-1">
+      {/* Daily Focus Section */}
+      <section className="space-y-4">
+        <div className="flex items-end justify-between px-1">
+          <div className="space-y-0.5">
             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Tantangan Hari Ini</NeoText>
-            <NeoText variant="subtitle" stroke className="text-3xl leading-none italic">AKTIVITAS SERU</NeoText>
+            <NeoText variant="subtitle" stroke className="text-4xl leading-tight italic">AKTIVITAS SERU</NeoText>
           </div>
-          <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-black border-2 border-primary/20">
+          <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black border-2 border-primary/20 mb-1">
             {remainingMissions.length} MISI TERSISA
           </div>
         </div>
@@ -47,34 +47,34 @@ export default function HomeAppPage() {
               progress={0}
               total={remainingMissions[0].total}
               onAction={() => router.push(remainingMissions[0].path)}
-              className="border-2 border-black shadow-neo hover:shadow-neo-lg transition-all"
+              className="border-4 border-black shadow-neo-sm hover:shadow-neo transition-all bg-card"
             />
           ) : (
-            <Card className="p-6 border-4 border-dashed border-black/10 flex flex-col items-center text-center gap-4">
-              <span className="text-4xl">🎊</span>
-              <NeoText variant="body" className="font-black uppercase text-xs opacity-40">Semua Misi Hari Ini Selesai!</NeoText>
+            <Card className="p-8 border-4 border-dashed border-black/10 flex flex-col items-center text-center gap-2 bg-muted/5">
+              <NeoText variant="subtitle" className="text-4xl">Horee!</NeoText>
+              <NeoText variant="body" className="font-black uppercase text-xs opacity-60">Semua Misi Hari Ini Selesai</NeoText>
             </Card>
           )}
         </div>
       </section>
 
-      {/* 🎲 Exploration Section */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between px-2">
-          <div className="space-y-1">
+      {/* Exploration Section */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <div className="space-y-0.5">
             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Eksplorasi</NeoText>
-            <NeoText variant="subtitle" stroke className="text-3xl leading-none italic">PILIH DUNIA</NeoText>
+            <NeoText variant="subtitle" stroke className="text-4xl leading-tight italic">PILIH DUNIA</NeoText>
           </div>
         </div>
         <GameSelectionGrid />
       </section>
 
-      {/* 📖 Storytelling Section */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between px-2">
-          <div className="space-y-1">
+      {/* Storytelling Section */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <div className="space-y-0.5">
             <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-widest text-[10px]">Waktu Cerita</NeoText>
-            <NeoText variant="subtitle" stroke className="text-3xl leading-none italic">DUNIA IMAJINASI</NeoText>
+            <NeoText variant="subtitle" stroke className="text-4xl leading-tight italic">DUNIA IMAJINASI</NeoText>
           </div>
         </div>
         <div className="bg-secondary/10 p-4 rounded-3xl border-4 border-black shadow-neo-sm">

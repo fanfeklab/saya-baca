@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, User, Gamepad2, Award } from "lucide-react";
-import { IconButton } from "@/components/atoms/icon-button";
+import { Home, User, Trophy, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface BottomNavItem {
@@ -14,56 +13,47 @@ export interface BottomNavItem {
 
 const DEFAULT_NAV_ITEMS: BottomNavItem[] = [
   { name: "Beranda", path: "/main/learn", icon: Home },
-  { name: "Game", path: "/main/games", icon: Gamepad2 },
-  { name: "Prestasi", path: "/main/achievements", icon: Award },
-  { name: "Profil", path: "/select-profile", icon: User },
+  { name: "Peringkat", path: "/main/leaderboard", icon: Trophy },
+  { name: "Hadiah", path: "/main/achievements", icon: Award },
+  { name: "Profil", path: "/main/profile", icon: User },
 ];
 
 export interface BottomNavProps {
   className?: string;
   items?: BottomNavItem[];
-  variant?: "default" | "floating" | "dock";
 }
 
-export function BottomNav({ className, items = DEFAULT_NAV_ITEMS, variant = "default" }: BottomNavProps) {
+export function BottomNav({ className, items = DEFAULT_NAV_ITEMS }: BottomNavProps) {
   const pathname = usePathname();
 
-  const containerStyle = {
-    default: "fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4",
-    floating: "fixed bottom-8 left-0 right-0 z-50 flex justify-center px-4",
-    dock: "fixed bottom-0 left-0 right-0 z-50 flex justify-center w-full",
-  };
-
-  const navStyle = {
-    default: "flex items-center justify-around w-full max-w-md bg-card border-2 border-black rounded-2xl shadow-neo p-1",
-    floating: "flex items-center justify-around w-full max-w-xs bg-card border-2 border-black rounded-full shadow-neo p-1",
-    dock: "flex items-center justify-around w-full bg-card border-t-2 border-black p-2 pb-safe",
-  };
-
   return (
-    <div className={cn(containerStyle[variant], className)}>
-      <nav className={navStyle[variant]}>
+    <div className={cn("fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6 animate-in slide-in-from-bottom-10 duration-500", className)}>
+      <nav className="flex items-center justify-around w-full max-w-md bg-card border-4 border-black rounded-[2rem] shadow-neo-lg p-2 h-20">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.path || pathname?.startsWith(item.path + '/');
+          const isActive = pathname === item.path || (item.path !== "/main/learn" && pathname?.startsWith(item.path));
           
           return (
-            <Link key={item.path} href={item.path} passHref>
-              <IconButton 
-                variant="ghost" 
+            <Link key={item.path} href={item.path} className="relative group">
+              <div 
                 className={cn(
-                  "flex flex-col gap-0 transition-all border-2",
-                  variant === "floating" ? "h-12 w-12 rounded-full" : "h-14 w-16 rounded-xl",
+                  "flex flex-col items-center justify-center gap-1 w-16 h-16 rounded-2xl transition-all duration-300 active:scale-90",
                   isActive 
-                    ? "bg-primary text-primary-foreground border-black shadow-neo -translate-y-1" 
-                    : "text-muted-foreground hover:bg-muted/50 border-transparent shadow-none hover:shadow-neo-sm hover:-translate-y-0.5"
+                    ? "bg-primary text-primary-foreground border-2 border-black shadow-neo -translate-y-1.5" 
+                    : "text-muted-foreground hover:bg-muted/50"
                 )}
               >
-                <Icon className={cn("w-5 h-5 stroke-[2.5px]", isActive && "fill-white/20")} />
-                {variant !== "floating" && (
-                  <span className="text-[9px] font-black tracking-widest uppercase mt-0.5">{item.name}</span>
+                <Icon className={cn("size-6 transition-transform group-hover:scale-110", isActive ? "stroke-[3px]" : "stroke-[2.5px]")} />
+                <span className={cn(
+                  "text-[9px] font-black tracking-widest uppercase transition-all",
+                  isActive ? "opacity-100" : "opacity-40"
+                )}>
+                  {item.name}
+                </span>
+                {isActive && (
+                    <div className="absolute -top-1 -right-1 size-3 bg-yellow-400 border-2 border-black rounded-full animate-bounce shadow-neo-sm" />
                 )}
-              </IconButton>
+              </div>
             </Link>
           )
         })}

@@ -3,20 +3,21 @@
 import React from "react";
 import { NeoText } from "@/components/atoms/neo-text";
 import { Card, CardContent } from "@/components/ui/card";
-import { Award, Trophy, Medal, ArrowLeft } from "lucide-react";
+import { Star, Trophy, Medal, ArrowLeft, Award } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAppStore } from "@/lib/store";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
+import { GameHeader } from "@/components/molecules/game-header";
 
 const GLOBAL_LEADERBOARD = [
-  { id: "lb1", name: "Rizky", stars: 2500, level: 12, avatar: "Aneka", emoji: "🦊" },
-  { id: "lb2", name: "Siti", stars: 2100, level: 11, avatar: "Joy", emoji: "🐨" },
-  { id: "lb3", name: "Baim", stars: 1850, level: 9, avatar: "Baim", emoji: "🦁" },
-  { id: "lb4", name: "Aisyah", stars: 1540, level: 8, avatar: "Ais", emoji: "🐰" },
-  { id: "lb5", name: "Zidan", stars: 1210, level: 7, avatar: "Zidan", emoji: "🐯" },
+  { id: "lb1", name: "Rizky", stars: 2500, level: 12, avatar: "Aneka" },
+  { id: "lb2", name: "Siti", stars: 2100, level: 11, avatar: "Joy" },
+  { id: "lb3", name: "Baim", stars: 1850, level: 9, avatar: "Baim" },
+  { id: "lb4", name: "Aisyah", stars: 1540, level: 8, avatar: "Ais" },
+  { id: "lb5", name: "Zidan", stars: 1210, level: 7, avatar: "Zidan" },
 ];
 
 export default function LeaderboardPage() {
@@ -33,8 +34,7 @@ export default function LeaderboardPage() {
             name: currentProfile.name,
             stars: currentProfile.stars,
             level: Math.floor(currentProfile.stars / 30) + 1,
-            avatar: currentProfile.avatar,
-            emoji: "⭐"
+            avatar: currentProfile.avatar
         });
     }
   }
@@ -45,19 +45,11 @@ export default function LeaderboardPage() {
   return (
     <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button 
-          variant="outline" 
-          size="icon-sm" 
-          onClick={() => router.back()}
-          className="rounded-xl shadow-neo-sm hover:shadow-neo active:shadow-none border-2 border-black bg-background"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <div className="flex-1 text-center pr-10">
-          <NeoText variant="subtitle" stroke className="text-3xl uppercase tracking-tighter italic">Papan Peringkat</NeoText>
-        </div>
-      </div>
+      <GameHeader 
+        title="Papan Peringkat" 
+        currentLevel={0} 
+        totalLevels={0} 
+      />
 
       {/* Podium for Top 3 */}
       <div className="grid grid-cols-3 items-end gap-2 pt-12 pb-8">
@@ -128,7 +120,7 @@ export default function LeaderboardPage() {
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 bg-accent border-2 border-black rounded-lg shadow-neo-sm">
                     <span className="font-black text-xs">{player.stars}</span>
-                    <span className="text-xs">⭐</span>
+                    <Star className="size-3 fill-white text-white" />
                 </div>
              </CardContent>
            </Card>

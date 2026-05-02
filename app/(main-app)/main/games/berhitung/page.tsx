@@ -80,33 +80,35 @@ export default function BerhitungGamePage() {
       <div className="flex flex-col p-8 gap-8 animate-in fade-in zoom-in duration-700 pb-32 min-h-[80vh] items-center justify-center text-center max-w-md mx-auto">
         <ConfettiBurst>
           <IllustrationHolder 
-            variant={isSuccess ? "success" : "destructive"} 
+            variant={isSuccess ? "accent" : "muted"} 
             size="xl" 
-            emoji={isSuccess ? "🎉" : "😴"} 
-            className="mx-auto mb-6 scale-125 border-4 border-black shadow-neo-lg" 
+            icon={isSuccess ? Trophy : RotateCcw} 
+            className="mx-auto mb-8 scale-125 border-4 border-black shadow-neo-lg" 
           />
         </ConfettiBurst>
         <div className="space-y-4">
-          <NeoText variant="title" stroke className={cn("text-5xl", isSuccess ? "text-success" : "text-destructive")}>
+          <NeoText variant="title" stroke className={cn("text-5xl uppercase italic", isSuccess ? "text-primary" : "text-muted-foreground")}>
             {isSuccess ? "Hebat!" : "Istirahat!"}
           </NeoText>
-          <NeoText variant="subtitle" className="text-muted-foreground uppercase tracking-widest text-sm font-black">
+          <NeoText variant="subtitle" className="text-muted-foreground uppercase tracking-widest text-[10px] font-black">
             {isSuccess ? "Misi Berhitung Selesai" : "Energi Kamu Habis"}
           </NeoText>
         </div>
-        <NeoText variant="body" className="font-medium">
-          {isSuccess 
-            ? "Kamu jago sekali berhitung! Teruslah berlatih ya!" 
-            : "Waktunya istirahat sejenak untuk mengisi kembali energimu."}
-        </NeoText>
+        <div className="bg-card p-6 rounded-3xl border-4 border-black shadow-neo-sm">
+            <NeoText variant="body" className="font-black text-sm uppercase tracking-tight">
+            {isSuccess 
+                ? "Kamu jago sekali berhitung! Teruslah berlatih ya!" 
+                : "Waktunya istirahat sejenak untuk mengisi kembali energimu."}
+            </NeoText>
+        </div>
         
-        <div className="flex flex-col gap-4 w-full mt-8">
-          <Button variant="default" className="w-full h-16 text-xl font-black uppercase tracking-widest shadow-neo hover:shadow-neo-lg active:shadow-none transition-all text-black border-2 border-black" onClick={() => router.push("/main/learn")}>
-            Ke Beranda <Home className="ml-2 size-6 text-black" />
+        <div className="flex flex-col gap-4 w-full mt-4">
+          <Button variant="default" className="w-full h-16 text-xl font-black uppercase tracking-widest shadow-neo hover:shadow-neo-lg active:shadow-none transition-all text-black border-4 border-black rounded-2xl" onClick={() => router.push("/main/learn")}>
+            Ke Beranda <Home className="ml-3 size-6 text-black" strokeWidth={3} />
           </Button>
           {isSuccess && (
-            <Button variant="ghost" className="w-full text-foreground/60 font-black uppercase tracking-tight text-xs" onClick={handleReset}>
-              <RotateCcw className="w-4 h-4 mr-2" /> Ulangi Petualangan
+            <Button variant="ghost" className="w-full h-12 text-foreground/40 font-black uppercase tracking-widest text-[10px] rounded-xl hover:bg-muted/50" onClick={handleReset}>
+              <RotateCcw className="w-4 h-4 mr-2" strokeWidth={3} /> Ulangi Petualangan
             </Button>
           )}
         </div>
