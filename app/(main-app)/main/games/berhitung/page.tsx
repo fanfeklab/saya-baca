@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { IllustrationHolder } from "@/components/atoms/illustration-holder";
 import { ConfettiBurst } from "@/components/atoms/confetti-burst";
 import { cn } from "@/lib/utils";
+import { useAppStore } from "@/lib/store";
 
 const LEVELS = [
   { question: "1 + 1 = ?", answer: 2, options: [1, 2, 3, 4] },
@@ -18,6 +19,8 @@ const LEVELS = [
 
 export default function BerhitungGamePage() {
   const router = useRouter();
+  const addStars = useAppStore(state => state.addStars);
+  const completeMission = useAppStore(state => state.completeMission);
   const [levelIndex, setLevelIndex] = React.useState(0);
   const [isWon, setIsWon] = React.useState(false);
   const [selectedAnswer, setSelectedAnswer] = React.useState<number | null>(null);
@@ -33,6 +36,8 @@ export default function BerhitungGamePage() {
           setSelectedAnswer(null);
         } else {
           setIsWon(true);
+          addStars(30);
+          completeMission('berhitung');
         }
       } else {
         setSelectedAnswer(null);
@@ -60,7 +65,7 @@ export default function BerhitungGamePage() {
             <RotateCcw className="w-5 h-5 mr-2" />
             Main Lagi
           </Button>
-          <Button variant="default" className="flex-1" onClick={() => router.push("/home")}>
+          <Button variant="default" className="flex-1" onClick={() => router.push("/main/learn")}>
             Selesai
           </Button>
         </div>

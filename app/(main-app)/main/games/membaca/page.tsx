@@ -11,6 +11,8 @@ import { IllustrationHolder } from "@/components/atoms/illustration-holder";
 import { AudioButton } from "@/components/atoms/audio-button";
 import { ConfettiBurst } from "@/components/atoms/confetti-burst";
 
+import { useAppStore } from "@/lib/store";
+
 const LEVELS = [
   { word: "B - U - K - U", image: "📚", audio: "Buku!" },
   { word: "A - P - E - L", image: "🍎", audio: "Apel!" },
@@ -19,6 +21,8 @@ const LEVELS = [
 
 export default function MembacaGamePage() {
   const router = useRouter();
+  const addStars = useAppStore(state => state.addStars);
+  const completeMission = useAppStore(state => state.completeMission);
   const [levelIndex, setLevelIndex] = React.useState(0);
   const [isWon, setIsWon] = React.useState(false);
 
@@ -29,6 +33,8 @@ export default function MembacaGamePage() {
       setLevelIndex(prev => prev + 1);
     } else {
       setIsWon(true);
+      addStars(50); // Reward stars for finishing
+      completeMission('membaca');
     }
   };
 

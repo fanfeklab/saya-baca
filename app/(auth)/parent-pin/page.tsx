@@ -27,7 +27,7 @@ export default function ParentPinPage() {
         if (newPin.join('') === CORRECT_PIN) {
           setSuccess(true);
           setTimeout(() => {
-            router.push('/dashboard'); // Adjusted redirect to match legacy dashboard path
+            router.push('/parent'); // Adjusted redirect to match legacy dashboard path
           }, 1000);
         } else {
           setError(true);

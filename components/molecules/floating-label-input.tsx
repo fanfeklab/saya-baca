@@ -10,7 +10,8 @@ export interface FloatingLabelInputProps
 
 export const FloatingLabelInput = React.forwardRef<HTMLInputElement, FloatingLabelInputProps>(
   ({ className, label, id, ...props }, ref) => {
-    const inputId = id || React.useId()
+    const generatedId = React.useId()
+    const inputId = id || generatedId
     
     return (
       <div className={cn("relative group", className)}>

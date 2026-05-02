@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { IllustrationHolder } from "@/components/atoms/illustration-holder";
 import { cn } from "@/lib/utils";
 
+import { useAppStore } from "@/lib/store";
+
 const LYRICS = [
   "Bintang kecil",
   "Di langit yang biru",
@@ -18,8 +20,11 @@ const LYRICS = [
 
 export default function MenyanyiGamePage() {
   const router = useRouter();
+  const addStars = useAppStore(state => state.addStars);
+  const completeMission = useAppStore(state => state.completeMission);
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [currentLine, setCurrentLine] = React.useState(0);
+  const [isFinished, setIsFinished] = React.useState(false);
 
   // Fake karaoke logic
   React.useEffect(() => {
@@ -29,12 +34,15 @@ export default function MenyanyiGamePage() {
         setCurrentLine((prev) => {
           if (prev < LYRICS.length - 1) return prev + 1;
           setIsPlaying(false);
+          setIsFinished(true);
+          addStars(40);
+          completeMission('menyanyi');
           return 0; // reset
         });
       }, 2000);
     }
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, addStars, completeMission]);
 
   return (
     <div className="flex flex-col p-6 gap-8 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-32 max-w-2xl mx-auto">

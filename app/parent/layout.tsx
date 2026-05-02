@@ -1,90 +1,115 @@
-import * as React from "react"
-import { Typography } from "@/components/atoms/typography"
-import { ThemeToggle } from "@/components/atoms/theme-toggle"
-import { Avatar } from "@/components/atoms/avatar"
-import Link from "next/link"
-import { LayoutDashboard, Users, BarChart3, Settings, BookOpen, LogOut } from "lucide-react"
+"use client";
+
+import React from "react";
+import { ThemeToggle } from "@/components/atoms/theme-toggle";
+import { NeoText } from "@/components/atoms/neo-text";
+import { Button } from "@/components/ui/button";
+import { 
+  Users, 
+  TrendingUp, 
+  Settings, 
+  LogOut, 
+  BarChart3, 
+  LayoutDashboard,
+  Menu
+} from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+const menuItems = [
+  { href: "/parent", icon: BarChart3, label: "Ringkasan" },
+  { href: "/parent/children", icon: Users, label: "Anak-Anak" },
+  { href: "/parent/reports", icon: TrendingUp, label: "Perkembangan" },
+  { href: "/parent/settings", icon: Settings, label: "Pengaturan" },
+];
+
+function SidebarContent({ pathname, onNavigate }: { pathname: string, onNavigate: (href: string) => void }) {
+  return (
+    <div className="flex flex-col h-full gap-8">
+      <div className="flex items-center gap-3 px-2">
+        <div className="size-10 bg-primary border-2 border-black shadow-neo-sm rotate-3 flex items-center justify-center">
+          <LayoutDashboard className="size-6 text-white" />
+        </div>
+        <NeoText variant="subtitle" stroke className="text-xl uppercase italic">Parent HUB</NeoText>
+      </div>
+
+      <nav className="flex flex-col gap-2 flex-1">
+        {menuItems.map((item) => (
+          <Button 
+            key={item.href}
+            variant={pathname === item.href ? "default" : "ghost"}
+            className={cn(
+              "justify-start h-12 text-sm font-black transition-all uppercase tracking-tighter",
+              pathname === item.href 
+                ? "border-2 border-black shadow-neo hover:shadow-none hover:translate-x-1 hover:translate-y-1 text-black" 
+                : "opacity-60 hover:opacity-100"
+            )}
+            onClick={() => onNavigate(item.href)}
+          >
+            <item.icon className="size-5 mr-3" /> {item.label}
+          </Button>
+        ))}
+      </nav>
+
+      <div className="mt-auto pt-6 border-t-2 border-black/5">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-destructive hover:bg-destructive/10 font-black uppercase tracking-tighter"
+          onClick={() => onNavigate("/select-profile")}
+        >
+          <LogOut className="size-5 mr-3" /> Kembali
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export default function ParentLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  const handleNavigate = (href: string) => {
+    router.push(href);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex selection:bg-indigo-100 selection:text-indigo-900">
-      {/* Premium subtle background */}
-      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-slate-300/20 dark:bg-slate-800/20 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/3" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-200/20 dark:bg-indigo-900/20 blur-[120px] rounded-full -translate-x-1/3 translate-y-1/3" />
-      </div>
-
-      {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-slate-200/50 dark:border-slate-800/50 bg-white/40 dark:bg-black/20 backdrop-blur-3xl sticky top-0 h-screen z-40">
-        <div className="p-6">
-          <Link href="/parent" className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <Typography variant="h4" className="text-white text-sm">Sb</Typography>
-            </div>
-            <Typography variant="h4" className="font-bold">Portal Orang Tua</Typography>
-          </Link>
-        </div>
-
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-          <SidebarItem href="/parent" icon={<LayoutDashboard size={20} />} label="Ikhtisar" active />
-          <SidebarItem href="/parent/children" icon={<Users size={20} />} label="Profil Anak" />
-          <SidebarItem href="/parent/reports" icon={<BarChart3 size={20} />} label="Laporan Belajar" />
-          <SidebarItem href="/parent/curriculum" icon={<BookOpen size={20} />} label="Kurikulum" />
-          <SidebarItem href="/parent/settings" icon={<Settings size={20} />} label="Pengaturan" />
-        </nav>
-
-        <div className="p-4 border-t border-slate-200/50 dark:border-slate-800/50">
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-white/50 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/50">
-            <Avatar size="sm" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Bunda" />
-            <div className="flex-1 min-w-0">
-              <Typography variant="p" className="text-sm font-semibold truncate">Bunda Ani</Typography>
-              <Typography variant="muted" className="text-xs truncate">Bunda dari Budi</Typography>
-            </div>
-          </div>
-          <button className="flex items-center gap-3 w-full mt-2 p-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors font-medium">
-            <LogOut size={16} />
-            Keluar
-          </button>
-        </div>
+    <div className="flex min-h-screen bg-background">
+      {/* Sidebar - Desktop */}
+      <aside className="hidden lg:flex flex-col w-72 border-r-4 border-black p-6 gap-8 bg-card shadow-neo-sm sticky top-0 h-screen overflow-y-auto">
+        <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
       </aside>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b border-slate-200/50 dark:border-slate-800/50 bg-white/40 dark:bg-black/20 backdrop-blur-xl sticky top-0 z-30 flex items-center justify-between px-6">
-          <div className="md:hidden">
-            {/* Mobile menu trigger would go here */}
-            <Typography variant="h4" className="font-bold">Portal</Typography>
-          </div>
-          
-          <div className="flex-1 flex justify-end items-center gap-4">
-            <ThemeToggle />
-          </div>
+        {/* Header - Mobile & Desktop Top Bar */}
+        <header className="h-16 border-b-2 border-black lg:border-none p-4 flex items-center justify-between lg:justify-end gap-4 sticky top-0 bg-background/80 backdrop-blur-md z-30 lg:px-12">
+            <div className="lg:hidden flex items-center gap-2">
+                 <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="outline" size="icon" className="border-2 border-black shadow-neo-sm active:shadow-none">
+                            <Menu className="size-6" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-72 p-6 border-r-4 border-black">
+                        <SidebarContent pathname={pathname || ""} onNavigate={handleNavigate} />
+                    </SheetContent>
+                 </Sheet>
+                 <NeoText variant="subtitle" stroke className="text-lg uppercase italic ml-2">HUB</NeoText>
+            </div>
+            <ThemeToggle className="border-2 border-black h-10 w-10 shadow-neo-sm active:shadow-none bg-background" />
         </header>
 
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto w-full max-w-7xl mx-auto">
+        <main className="flex-1 p-6 md:p-12">
           {children}
         </main>
       </div>
     </div>
-  )
-}
-
-function SidebarItem({ href, icon, label, active }: { href: string, icon: React.ReactNode, label: string, active?: boolean }) {
-  return (
-    <Link 
-      href={href} 
-      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-        active 
-          ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20" 
-          : "text-slate-600 dark:text-slate-400 hover:bg-white/60 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-slate-200"
-      }`}
-    >
-      {icon}
-      <span className="font-medium text-sm">{label}</span>
-    </Link>
-  )
+  );
 }

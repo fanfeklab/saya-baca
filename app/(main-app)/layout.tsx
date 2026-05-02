@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export default function MainAppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isGamePath = pathname?.includes('/game/');
+  const isGamePath = pathname?.includes('/games/');
 
   return (
     <div className="min-h-screen flex flex-col relative pb-24 overflow-x-hidden">

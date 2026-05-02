@@ -10,16 +10,26 @@ import { ConfettiBurst } from "@/components/atoms/confetti-burst";
 import { IllustrationHolder } from "@/components/atoms/illustration-holder";
 import { cn } from "@/lib/utils";
 
+import { useAppStore } from "@/lib/store";
+
 const COLORS = ["#FF5733", "#33FF57", "#3357FF", "#FDE047", "#A855F7", "#000000"];
 
 export default function MewarnaiGamePage() {
   const router = useRouter();
+  const addStars = useAppStore(state => state.addStars);
+  const completeMission = useAppStore(state => state.completeMission);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = React.useState(false);
   const [color, setColor] = React.useState(COLORS[0]);
   const [size, setSize] = React.useState(10);
   const [isWon, setIsWon] = React.useState(false);
+
+  const handleFinish = () => {
+    setIsWon(true);
+    addStars(25);
+    completeMission('mewarnai');
+  };
 
   // Resize canvas to fill container
   React.useEffect(() => {
@@ -136,7 +146,7 @@ export default function MewarnaiGamePage() {
         <div className="flex-1 text-center">
           <NeoText variant="subtitle" stroke className="text-2xl uppercase tracking-tighter italic">Mari Menggambar</NeoText>
         </div>
-        <Button size="icon-sm" variant="default" onClick={() => setIsWon(true)} className="rounded-xl border-2 border-black shadow-neo-sm text-black">
+        <Button size="icon-sm" variant="default" onClick={handleFinish} className="rounded-xl border-2 border-black shadow-neo-sm text-black">
            <Check className="size-5" />
         </Button>
       </div>

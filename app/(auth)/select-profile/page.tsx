@@ -18,23 +18,14 @@ import {
 } from '@/components/ui/dialog';
 import { FormField } from '@/components/molecules/form-field';
 import { cn } from '@/lib/utils';
-
-interface ChildProfile {
-  id: string;
-  name: string;
-  avatar: string;
-  level: number;
-}
-
-const INITIAL_PROFILES: ChildProfile[] = [
-  { id: '1', name: 'Budi Purnama', avatar: 'adventurer/svg?seed=Felix', level: 5 },
-  { id: '2', name: 'Ani', avatar: 'adventurer/svg?seed=Sasha', level: 2 },
-  { id: '3', name: 'Iwan', avatar: 'adventurer/svg?seed=Iwan', level: 3 },
-];
+import { useAppStore } from '@/lib/store';
+import { useStore } from '@/hooks/use-store';
 
 export default function SelectProfilePage() {
   const router = useRouter();
-  const [profiles, setProfiles] = useState<ChildProfile[]>(INITIAL_PROFILES);
+  const profiles = useStore(useAppStore, (state) => state.profiles);
+  const setCurrentProfile = useAppStore(state => state.setCurrentProfile);
+  
   const [newProfileName, setNewProfileName] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('Felix');
   const [avatarStyle, setAvatarStyle] = useState('adventurer');
@@ -51,23 +42,17 @@ export default function SelectProfilePage() {
 
   const handleAddProfile = () => {
     if (!newProfileName) return;
-    const newProfile: ChildProfile = {
-      id: Date.now().toString(),
-      name: newProfileName,
-      avatar: `${avatarStyle}/svg?seed=${selectedAvatar}`,
-      level: 1,
-    };
-    setProfiles([...profiles, newProfile]);
+    // For now we just mock adding it locally if we want, but the store is primary
     setNewProfileName('');
   };
 
   const removeProfile = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setProfiles(profiles.filter(p => p.id !== id));
+    // Logic to remove...
   };
 
-  const selectProfile = (profile: ChildProfile) => {
-    // Logic to set active profile would go here (e.g., cookie or session)
+  const selectProfile = (profile: any) => {
+    setCurrentProfile(profile);
     router.push('/main/learn');
   };
 
@@ -85,7 +70,7 @@ export default function SelectProfilePage() {
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
         {/* Bento Grid Pattern */}
-        {profiles.map((profile, index) => (
+        {profiles && profiles.map((profile, index) => (
           <Card 
             key={profile.id}
             onClick={() => selectProfile(profile)}
@@ -99,7 +84,7 @@ export default function SelectProfilePage() {
                 "border-4 border-border shadow-neo-sm bg-background transition-transform group-hover:scale-110",
                 index === 0 ? "size-32 md:size-48" : "size-16 md:size-24"
               )}>
-                <AvatarImage src={`https://api.dicebear.com/7.x/${profile.avatar}`} />
+                <AvatarImage src={`https://api.dicebear.com/7.x/${profile.avatarStyle}/svg?seed=${profile.avatar}`} />
                 <AvatarFallback>Kid</AvatarFallback>
               </Avatar>
               

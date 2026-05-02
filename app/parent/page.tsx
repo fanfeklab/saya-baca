@@ -1,177 +1,213 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Typography } from "@/components/atoms/typography"
-import { GlassCard } from "@/components/molecules/glass-card"
-import { Avatar } from "@/components/atoms/avatar"
-import { Award, Clock, BookOpen, TrendingUp, AlertCircle, ChevronRight } from "lucide-react"
+import React from "react";
+import { NeoText } from "@/components/atoms/neo-text";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { 
+  TrendingUp, 
+  Lock, 
+  BarChart3, 
+  Clock,
+  ArrowRight
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip, 
+    ResponsiveContainer,
+    AreaChart,
+    Area
+} from "recharts";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { useAppStore } from "@/lib/store";
+import { useStore } from "@/hooks/use-store";
+
+const ACTIVITY_DATA = [
+  { day: "Sen", score: 40 },
+  { day: "Sel", score: 30 },
+  { day: "Rab", score: 65 },
+  { day: "Kam", score: 45 },
+  { day: "Jum", score: 90 },
+  { day: "Sab", score: 70 },
+  { day: "Min", score: 55 },
+];
 
 export default function ParentDashboardPage() {
+  const router = useRouter();
+  const currentProfile = useStore(useAppStore, (state) => state.currentProfile);
+  const profiles = useStore(useAppStore, (state) => state.profiles) || [];
+
   return (
-    <div className="flex flex-col gap-8">
-      <div>
-        <Typography variant="h2" className="font-bold mb-2">Ikhtisar Perkembangan</Typography>
-        <Typography variant="muted">Pantau aktivitas belajar dan pencapaian anak Anda hari ini.</Typography>
-      </div>
-
-      {/* Child Selector & Quick Stats - Bento Grid Top Section */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        
-        {/* Active Child Profile Card */}
-        <GlassCard className="md:col-span-1 border-2 border-indigo-100 dark:border-indigo-900/50 bg-gradient-to-br from-indigo-50/50 to-white/50 dark:from-indigo-950/20 dark:to-slate-900/50 p-6 flex flex-col items-center justify-center text-center">
-          <Avatar size="lg" src="https://api.dicebear.com/7.x/adventurer/svg?seed=Budi" className="w-20 h-20 mb-4 ring-4 ring-white dark:ring-slate-800 shadow-xl" />
-          <Typography variant="h3" className="font-bold">Budi</Typography>
-          <Typography variant="muted" className="text-sm mb-4">5 Tahun • Level 4</Typography>
-          <button className="text-xs font-semibold px-4 py-2 bg-white dark:bg-slate-800 rounded-full shadow border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
-            Ganti Profil Anak
-          </button>
-        </GlassCard>
-
-        {/* Quick Stats Bento */}
-        <div className="md:col-span-3 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatBento 
-            title="Waktu Belajar" 
-            value="45 Mnt" 
-            trend="+10% dari kemarin" 
-            icon={<Clock className="text-blue-500" />} 
-            bg="bg-blue-50 dark:bg-blue-950/30"
-          />
-          <StatBento 
-            title="Buku Selesai" 
-            value="3" 
-            trend="Target mingguan: 5" 
-            icon={<BookOpen className="text-emerald-500" />} 
-            bg="bg-emerald-50 dark:bg-emerald-950/30"
-          />
-          <StatBento 
-            title="Suku Kata Baru" 
-            value="12" 
-            trend="100% akurasi" 
-            icon={<TrendingUp className="text-amber-500" />} 
-            bg="bg-amber-50 dark:bg-amber-950/30"
-          />
-          <StatBento 
-            title="Piala Didapat" 
-            value="2" 
-            trend="Level up sebentar lagi" 
-            icon={<Award className="text-fuchsia-500" />} 
-            bg="bg-fuchsia-50 dark:bg-fuchsia-950/30"
-          />
-        </div>
-      </div>
-
-      {/* Main Content Split */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Activity Feed */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <Typography variant="h4" className="font-bold">Aktivitas Terakhir</Typography>
-            <button className="text-sm text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Lihat Semua</button>
-          </div>
-          
-          <div className="flex flex-col gap-4">
-            <ActivityItem 
-              time="Hari ini, 14:30" 
-              title="Selesai membaca buku 'Petualangan Kucing Merah'" 
-              type="book"
-              score="100/100"
-            />
-            <ActivityItem 
-              time="Hari ini, 14:15" 
-              title="Mini Game: Mencocokkan Suku Kata (Ma, Mi, Mu, Me, Mo)" 
-              type="game"
-              score="Bintang 3"
-            />
-            <ActivityItem 
-              time="Kemarin, 09:00" 
-              title="Kuis Mingguan: Mengenal Hewan" 
-              type="quiz"
-              score="85/100"
-            />
-          </div>
-        </div>
-
-        {/* AI Recommendations / Alerts */}
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <Typography variant="h4" className="font-bold">Rekomendasi AI</Typography>
-          </div>
-          
-          <GlassCard variant="heavy" className="border-t-4 border-t-amber-400 bg-amber-50/50 dark:bg-amber-950/20">
-            <div className="flex gap-3 items-start mb-3">
-              <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
-              <div>
-                <Typography variant="p" className="font-semibold text-slate-800 dark:text-slate-200">Perlu Pengulangan</Typography>
-                <Typography variant="muted" className="text-sm">
-                  Budi tampak kesulitan dengan kombinasi huruf <strong>"Ny"</strong> dan <strong>"Ng"</strong> pada sesi kuis terakhir.
-                </Typography>
-              </div>
+    <div className="max-w-6xl mx-auto w-full">
+         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div className="space-y-1">
+                <NeoText variant="title" stroke className="text-4xl md:text-5xl italic uppercase leading-none">STATISTIK BELAJAR</NeoText>
+                <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px]">Pantau Perkembangan Jagoan Kecilmu</NeoText>
             </div>
-            <button className="w-full py-2 bg-white dark:bg-slate-800 rounded-lg text-sm font-medium border border-slate-200 dark:border-slate-700 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center justify-center gap-2">
-              Jadwalkan Latihan <ChevronRight size={16} />
-            </button>
-          </GlassCard>
-
-          <GlassCard className="bg-indigo-50/50 dark:bg-indigo-950/20 border-t-4 border-t-indigo-400">
-            <Typography variant="p" className="font-semibold mb-2 text-slate-800 dark:text-slate-200">Saran Buku Minggu Ini</Typography>
-            <div className="flex gap-3 mb-4">
-              <div className="w-16 h-20 bg-indigo-200 dark:bg-indigo-800 rounded shadow-sm shrink-0 flex items-center justify-center text-2xl">🐢</div>
-              <div>
-                <Typography variant="p" className="text-sm font-bold">Kura-kura yang Berani</Typography>
-                <Typography variant="muted" className="text-xs">Fokus: Akhiran konsonan (n, r, s)</Typography>
-              </div>
+            <div className="flex items-center gap-4">
+                 <div className="bg-success text-black p-3 rounded-2xl border-2 border-black shadow-neo-sm flex items-center gap-2">
+                    <TrendingUp className="size-5" />
+                    <span className="font-black text-xs uppercase tracking-tighter">Performa Meningkat</span>
+                 </div>
             </div>
-            <button className="w-full py-2 bg-indigo-500 text-white rounded-lg text-sm font-medium shadow shadow-indigo-500/20 hover:bg-indigo-600 transition">
-              Tambahkan ke Daftar Baca Budi
-            </button>
-          </GlassCard>
-        </div>
+         </header>
 
-      </div>
+         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Main Stats Graph */}
+            <Card className="lg:col-span-8 border-4 border-black shadow-neo-lg bg-card overflow-hidden">
+                <CardHeader className="border-b-4 border-black px-8 py-6">
+                    <CardTitle className="flex items-center justify-between">
+                        <NeoText variant="subtitle" stroke className="uppercase italic">Waktu Bermain (Menit)</NeoText>
+                        <BarChart3 className="size-6 opacity-30" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="p-8 h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={ACTIVITY_DATA}>
+                            <defs>
+                                <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#FB7185" stopOpacity={0.8}/>
+                                    <stop offset="95%" stopColor="#FB7185" stopOpacity={0}/>
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-muted/20" />
+                            <XAxis 
+                                dataKey="day" 
+                                axisLine={false} 
+                                tickLine={false} 
+                                tick={{ fill: "currentColor", fontWeight: 800, fontSize: 12 }}
+                                className="text-muted-foreground"
+                            />
+                            <YAxis hide />
+                            <Tooltip 
+                                contentStyle={{ 
+                                    backgroundColor: 'hsl(var(--card))', 
+                                    border: '3px solid #000', 
+                                    borderRadius: '12px',
+                                    fontWeight: 900
+                                }} 
+                            />
+                            <Area 
+                                type="monotone" 
+                                dataKey="score" 
+                                stroke="#000" 
+                                strokeWidth={4} 
+                                fillOpacity={1} 
+                                fill="url(#colorScore)" 
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
+
+            {/* Side Stats */}
+            <div className="lg:col-span-4 flex flex-col gap-8">
+                {/* Profile Card */}
+                <Card className="border-4 border-black shadow-neo flex flex-col items-center p-8 gap-4 bg-primary text-black">
+                    <Avatar className="size-24 border-4 border-black shadow-neo-sm bg-white">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/${currentProfile?.avatarStyle || 'adventurer'}/svg?seed=${currentProfile?.avatar || 'Felix'}`} />
+                        <AvatarFallback>BD</AvatarFallback>
+                    </Avatar>
+                    <div className="text-center">
+                        <NeoText variant="subtitle" stroke className="text-2xl text-white uppercase italic">{currentProfile?.name || "Pilih Anak"}</NeoText>
+                        <NeoText variant="body" className="font-black uppercase tracking-widest text-[10px] text-white/80">Aktif Terakhir: Baru Saja</NeoText>
+                    </div>
+                    <Button 
+                        variant="outline" 
+                        className="w-full mt-2 bg-white text-black border-2 border-black shadow-neo-sm hover:shadow-neo transition-all font-black uppercase text-xs"
+                        onClick={() => router.push('/parent/children')}
+                    >
+                        Pilih Profil Lain
+                    </Button>
+                </Card>
+
+                {/* Score Summary */}
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-accent border-4 border-black shadow-neo p-4 flex flex-col items-center justify-center text-center gap-1">
+                        <NeoText variant="title" stroke className="text-4xl">{currentProfile?.stars || 0}</NeoText>
+                        <NeoText variant="body" className="font-black uppercase text-[8px] opacity-60">Bintang</NeoText>
+                    </div>
+                    <div className="bg-secondary border-4 border-black shadow-neo p-4 flex flex-col items-center justify-center text-center gap-1 text-white">
+                        <NeoText variant="title" stroke className="text-4xl">{currentProfile?.completedMissions.length || 0}</NeoText>
+                        <NeoText variant="body" className="font-black uppercase text-[8px] opacity-80">Misi Selesai</NeoText>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Grid */}
+            <div className="lg:col-span-6 flex flex-col gap-6">
+                <div className="flex items-center gap-3">
+                     <div className="size-8 bg-accent border-2 border-black shadow-neo-sm flex items-center justify-center">
+                        <TrendingUp className="size-4" />
+                     </div>
+                     <NeoText variant="subtitle" stroke className="text-2xl italic uppercase">Kebutuhan Latihan</NeoText>
+                </div>
+                <div className="space-y-4">
+                    {[
+                        { title: "Membaca Huruf Vokal", status: "Perlu Latihan", progress: 60, variant: "accent" },
+                        { title: "Berhitung 1 sampai 10", status: "Hampir Master", progress: 90, variant: "success" },
+                        { title: "Mengenal Warna", status: "Selesai", progress: 100, variant: "primary" },
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-4 bg-card border-2 border-black p-4 rounded-2xl shadow-neo-sm">
+                            <div className={cn("size-12 rounded-xl border-2 border-black flex items-center justify-center shrink-0", 
+                                item.variant === 'accent' ? 'bg-accent' : item.variant === 'success' ? 'bg-success' : 'bg-primary'
+                            )}>
+                                <Clock className={cn("size-6", item.variant === 'primary' ? 'text-white' : 'text-black')} />
+                            </div>
+                            <div className="flex-1 space-y-1">
+                                <NeoText variant="body" className="font-black uppercase text-sm">{item.title}</NeoText>
+                                <div className="w-full h-3 bg-muted rounded-full border-2 border-black overflow-hidden">
+                                    <div className="h-full bg-primary border-r-2 border-black" style={{ width: `${item.progress}%` }} />
+                                </div>
+                            </div>
+                            <div className="text-right hidden sm:block">
+                                <span className={cn("text-[10px] font-black uppercase px-2 py-1 border-2 border-black rounded-lg", 
+                                     item.variant === 'accent' ? 'bg-accent/20 text-accent-foreground' : item.variant === 'success' ? 'bg-success/20 text-success-foreground' : 'bg-primary/20 text-primary-foreground'
+                                )}>
+                                    {item.status}
+                                </span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="lg:col-span-6 flex flex-col gap-6">
+                <div className="flex items-center gap-3">
+                     <div className="size-8 bg-secondary border-2 border-black shadow-neo-sm flex items-center justify-center">
+                        <BarChart3 className="size-4 text-white" />
+                     </div>
+                     <NeoText variant="subtitle" stroke className="text-2xl italic uppercase">Aktivitas Terakhir</NeoText>
+                </div>
+                <Card className="border-4 border-black shadow-neo-lg divide-y-4 divide-black overflow-hidden bg-card">
+                    {[
+                        { icon: BarChart3, time: "10:30", desc: "Selesaikan Level 5 Membaca", reward: "+10 ⭐" },
+                        { icon: TrendingUp, time: "09:45", desc: "Mulai Tantangan Baru: Mewarnai", reward: "" },
+                        { icon: Lock, time: "Kemarin", desc: "Membuka Badge: Bintang Angka", reward: "🏆" },
+                    ].map((log, i) => (
+                        <div key={i} className="flex items-center gap-4 p-5 hover:bg-muted/10 transition-colors">
+                            <div className="size-10 bg-background border-2 border-black shadow-neo-sm rotate-3 flex items-center justify-center shrink-0">
+                                <log.icon className="size-5" />
+                            </div>
+                            <div className="flex-1">
+                                <NeoText variant="body" className="font-black text-sm uppercase">{log.desc}</NeoText>
+                                <NeoText variant="body" className="text-[10px] opacity-40 uppercase tracking-widest leading-none mt-1">{log.time}</NeoText>
+                            </div>
+                            {log.reward && (
+                                <div className="font-black text-primary text-xl drop-shadow-sm">{log.reward}</div>
+                            )}
+                        </div>
+                    ))}
+                    <Button variant="ghost" className="w-full rounded-none h-14 font-black uppercase text-[10px] tracking-widest group border-t-2 border-black">
+                        Lihat Seluruh Log <ArrowRight className="ml-2 size-4 group-hover:translate-x-2 transition-transform" />
+                    </Button>
+                </Card>
+            </div>
+         </div>
     </div>
-  )
-}
-
-function StatBento({ title, value, trend, icon, bg }: { title: string, value: string, trend: string, icon: React.ReactNode, bg: string }) {
-  return (
-    <GlassCard className={`p-5 flex flex-col justify-between ${bg} border border-black/5 dark:border-white/5`}>
-      <div className="flex justify-between items-start mb-4">
-        <div className="p-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm">
-          {icon}
-        </div>
-      </div>
-      <div>
-        <Typography variant="h3" className="font-bold tracking-tight mb-1">{value}</Typography>
-        <Typography variant="muted" className="text-xs font-semibold uppercase tracking-wider">{title}</Typography>
-        <Typography variant="muted" className="text-[10px] mt-2 opacity-80">{trend}</Typography>
-      </div>
-    </GlassCard>
-  )
-}
-
-function ActivityItem({ time, title, type, score }: { time: string, title: string, type: 'book' | 'game' | 'quiz', score: string }) {
-  const getIcon = () => {
-    switch (type) {
-      case 'book': return <BookOpen className="text-indigo-500 w-4 h-4" />
-      case 'game': return <div className="text-fuchsia-500 w-4 h-4 flex items-center justify-center">🎮</div>
-      case 'quiz': return <div className="text-amber-500 w-4 h-4 flex items-center justify-center">📝</div>
-    }
-  }
-
-  return (
-    <GlassCard className="p-4 flex items-start gap-4 hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors">
-      <div className="p-3 bg-white dark:bg-slate-900 rounded-full shadow-sm shrink-0 border border-slate-100 dark:border-slate-800">
-        {getIcon()}
-      </div>
-      <div className="flex-1 min-w-0">
-        <Typography variant="p" className="font-semibold text-sm mb-1">{title}</Typography>
-        <div className="flex items-center gap-3">
-          <Typography variant="muted" className="text-xs">{time}</Typography>
-          <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
-          <Typography variant="muted" className="text-xs font-medium text-emerald-600 dark:text-emerald-400">{score}</Typography>
-        </div>
-      </div>
-    </GlassCard>
-  )
+  );
 }

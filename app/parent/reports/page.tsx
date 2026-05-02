@@ -1,10 +1,25 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Typography } from "@/components/atoms/typography"
-import { GlassCard } from "@/components/molecules/glass-card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts"
-import { Award, Target, Trophy, Clock } from "lucide-react"
+import React from "react";
+import { NeoText } from "@/components/atoms/neo-text";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+    LineChart, 
+    Line, 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip, 
+    ResponsiveContainer, 
+    BarChart, 
+    Bar,
+    AreaChart,
+    Area
+} from "recharts";
+import { Award, Target, Trophy, Clock, TrendingUp } from "lucide-react";
+import { useAppStore } from "@/lib/store";
+import { useStore } from "@/hooks/use-store";
+import { cn } from "@/lib/utils";
 
 const weeklyData = [
   { name: "Sen", score: 65, time: 30 },
@@ -14,119 +29,106 @@ const weeklyData = [
   { name: "Jum", score: 90, time: 55 },
   { name: "Sab", score: 95, time: 70 },
   { name: "Min", score: 92, time: 65 },
-]
+];
 
 export default function ReportsPage() {
+  const currentProfile = useStore(useAppStore, (state) => state.currentProfile);
+
   return (
-    <div className="flex flex-col gap-8 pb-10">
-      <div>
-        <Typography variant="h2" className="font-bold mb-2">Laporan Belajar Budi</Typography>
-        <Typography variant="muted">Lihat statistik dan perkembangan belajar secara detail.</Typography>
-      </div>
+    <div className="max-w-6xl mx-auto w-full space-y-12">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+         <div className="space-y-1">
+            <NeoText variant="title" stroke className="text-4xl md:text-5xl italic uppercase leading-none">LAPORAN BELAJAR</NeoText>
+            <NeoText variant="body" className="text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px]">
+                Statistik Detail untuk {currentProfile?.name || "Si Kecil"}
+            </NeoText>
+         </div>
+      </header>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <GlassCard className="p-4 border-l-4 border-l-indigo-500">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-               <Target className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <Typography variant="muted" className="text-sm font-semibold uppercase">Akurasi Rata-rata</Typography>
-          </div>
-          <Typography variant="h2" className="font-black mt-2">85%</Typography>
-          <Typography variant="muted" className="text-xs mt-1 text-emerald-500">+5% dari minggu lalu</Typography>
-        </GlassCard>
-
-        <GlassCard className="p-4 border-l-4 border-l-amber-500">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
-               <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-            </div>
-            <Typography variant="muted" className="text-sm font-semibold uppercase">Total Waktu</Typography>
-          </div>
-          <Typography variant="h2" className="font-black mt-2">6j 15m</Typography>
-          <Typography variant="muted" className="text-xs mt-1 text-emerald-500">+1j 30m dari minggu lalu</Typography>
-        </GlassCard>
-
-        <GlassCard className="p-4 border-l-4 border-l-fuchsia-500">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-fuchsia-100 dark:bg-fuchsia-900/30 rounded-lg">
-               <Trophy className="w-5 h-5 text-fuchsia-600 dark:text-fuchsia-400" />
-            </div>
-            <Typography variant="muted" className="text-sm font-semibold uppercase">Materi Selesai</Typography>
-          </div>
-          <Typography variant="h2" className="font-black mt-2">12</Typography>
-          <Typography variant="muted" className="text-xs mt-1">Suku kata & kalimat</Typography>
-        </GlassCard>
-
-        <GlassCard className="p-4 border-l-4 border-l-emerald-500">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-               <Award className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <Typography variant="muted" className="text-sm font-semibold uppercase">Piala</Typography>
-          </div>
-          <Typography variant="h2" className="font-black mt-2">3</Typography>
-          <Typography variant="muted" className="text-xs mt-1">Sangat baik minggu ini</Typography>
-        </GlassCard>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+            { label: "Akurasi", value: "85%", icon: Target, variant: "primary", trend: "+5%" },
+            { label: "Total Waktu", value: "6j 15m", icon: Clock, variant: "secondary", trend: "+1j 30m" },
+            { label: "Materi", value: "12", icon: Trophy, variant: "accent", trend: "Suku Kata" },
+            { label: "Piala", value: "3", icon: Award, variant: "success", trend: "Bagus!" },
+        ].map((item, i) => (
+             <Card key={i} className={cn("border-4 border-black shadow-neo bg-card p-6 overflow-hidden relative group")}>
+                <div className={cn("absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity")}>
+                    <item.icon className="size-16" />
+                </div>
+                <div className="flex items-center gap-3 mb-4">
+                    <div className={cn("p-2 border-2 border-black shadow-neo-sm rotate-3", 
+                        item.variant === 'primary' ? 'bg-primary' : item.variant === 'secondary' ? 'bg-secondary' : item.variant === 'accent' ? 'bg-accent' : 'bg-success'
+                    )}>
+                        <item.icon className={cn("size-5", ['primary','secondary'].includes(item.variant) ? 'text-white' : 'text-black')} />
+                    </div>
+                    <NeoText variant="body" className="text-[10px] font-black uppercase tracking-widest opacity-60">{item.label}</NeoText>
+                </div>
+                <NeoText variant="title" stroke className="text-4xl leading-none">{item.value}</NeoText>
+                <div className="flex items-center gap-1 mt-2">
+                    <TrendingUp className="size-3 text-success" />
+                    <span className="text-[9px] font-black uppercase tracking-tighter text-success">{item.trend}</span>
+                </div>
+             </Card>
+        ))}
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <GlassCard className="p-6">
-          <div className="mb-6">
-            <Typography variant="large" className="font-bold">Skor Pemahaman Mingguan</Typography>
-            <Typography variant="muted" className="text-sm">Nilai rata-rata kuis harian</Typography>
-          </div>
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={weeklyData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#888' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#888' }} domain={[0, 100]} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255,255,255,0.9)', 
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    border: 'none',
-                    color: '#000'
-                  }} 
-                />
-                <Line type="monotone" dataKey="score" stroke="#6366f1" strokeWidth={4} dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }} activeDot={{ r: 6 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </GlassCard>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="border-4 border-black shadow-neo-lg bg-card overflow-hidden">
+            <CardHeader className="border-b-4 border-black px-6 py-4">
+                <CardTitle>
+                    <NeoText variant="subtitle" stroke className="text-xl uppercase italic">Pemahaman Mingguan</NeoText>
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 h-[350px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={weeklyData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-muted/20" />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 800, fill: 'currentColor' }} className="text-muted-foreground" />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 800, fill: 'currentColor' }} domain={[0, 100]} className="text-muted-foreground" />
+                        <Tooltip 
+                            contentStyle={{ 
+                                backgroundColor: 'hsl(var(--card))', 
+                                border: '3px solid #000',
+                                borderRadius: '12px',
+                                fontWeight: 900
+                            }} 
+                        />
+                        <Area type="monotone" dataKey="score" stroke="#000" strokeWidth={4} fill="hsla(var(--primary), 0.3)" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
 
-        <GlassCard className="p-6">
-          <div className="mb-6">
-            <Typography variant="large" className="font-bold">Distribusi Waktu Belajar (Menit)</Typography>
-            <Typography variant="muted" className="text-sm">Waktu aktif per hari dalam seminggu</Typography>
-          </div>
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={weeklyData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }} barSize={32}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#888' }} />
-                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#888' }} />
-                <Tooltip
-                  cursor={{fill: 'rgba(0,0,0,0.05)'}}
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(255,255,255,0.9)', 
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    border: 'none',
-                    color: '#000'
-                  }} 
-                />
-                <Bar dataKey="time" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </GlassCard>
+        <Card className="border-4 border-black shadow-neo-lg bg-card overflow-hidden">
+            <CardHeader className="border-b-4 border-black px-6 py-4">
+                <CardTitle>
+                    <NeoText variant="subtitle" stroke className="text-xl uppercase italic">Waktu Belajar (Menit)</NeoText>
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 h-[350px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={weeklyData} margin={{ top: 5, right: 20, bottom: 5, left: -20 }} barSize={40}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="text-muted/20" />
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 800, fill: 'currentColor' }} className="text-muted-foreground" />
+                        <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fontWeight: 800, fill: 'currentColor' }} className="text-muted-foreground" />
+                        <Tooltip
+                            cursor={{fill: 'rgba(0,0,0,0.05)'}}
+                            contentStyle={{ 
+                                backgroundColor: 'hsl(var(--card))', 
+                                border: '3px solid #000', 
+                                borderRadius: '12px',
+                                fontWeight: 900
+                            }} 
+                        />
+                        <Bar dataKey="time" fill="#FDE047" stroke="#000" strokeWidth={3} radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
       </div>
-
     </div>
-  )
+  );
 }

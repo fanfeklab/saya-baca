@@ -8,7 +8,7 @@ const GAMES = [
   {
     id: "membaca",
     title: "Membaca",
-    href: "/game/membaca",
+    href: "/main/games/membaca",
     icon: BookOpen,
     variant: "accent",
     styles: "bg-accent border-2 border-black shadow-neo hover:shadow-neo-lg text-black",
@@ -17,7 +17,7 @@ const GAMES = [
   {
     id: "berhitung",
     title: "Berhitung",
-    href: "/game/berhitung",
+    href: "/main/games/berhitung",
     icon: Shapes,
     variant: "success",
     styles: "bg-success border-2 border-black shadow-neo hover:shadow-neo-lg text-black",
@@ -26,7 +26,7 @@ const GAMES = [
   {
     id: "menyanyi",
     title: "Menyanyi",
-    href: "/game/menyanyi",
+    href: "/main/games/menyanyi",
     icon: Music,
     variant: "secondary",
     styles: "bg-secondary border-2 border-black shadow-neo hover:shadow-neo-lg text-black",
@@ -35,7 +35,7 @@ const GAMES = [
   {
     id: "mewarnai",
     title: "Mewarnai",
-    href: "/game/mewarnai",
+    href: "/main/games/mewarnai",
     icon: Paintbrush,
     variant: "primary",
     styles: "bg-primary border-2 border-black shadow-neo hover:shadow-neo-lg text-white",

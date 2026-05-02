@@ -9,6 +9,7 @@ export default function MeshGradientBg() {
   const { resolvedTheme } = useTheme();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

@@ -29,7 +29,7 @@ export default function HomeAppPage() {
             description="Latih kemampuan eja kata hari ini."
             progress={1}
             total={3}
-            onAction={() => router.push('/game/membaca')}
+            onAction={() => router.push('/main/games/membaca')}
             className="border-2 border-black shadow-neo hover:shadow-neo-lg transition-all"
           />
         </div>
